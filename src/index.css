@@ -1,0 +1,34 @@
+/* Import the modern theme */
+@import './styles/theme.css';
+
+a {
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: inherit;
+  transition: color 0.2s ease;
+}
+a:hover {
+  color: var(--primary-light);
+}
+
+button {
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family);
+  background-color: var(--btn-bg);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+button:hover {
+  border-color: var(--primary);
+  background-color: var(--primary-2);
+}
+button:focus,
+button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
