@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
-import { useAppState } from "../context/AppStateContext";
 import Icon from "./Icon";
 import "../styles/navigation.css";
 
@@ -13,7 +12,6 @@ function Navigation() {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const { clearState } = useAppState();
 
   // Get current page from location
   const currentPage = location.pathname.replace("/", "") || "dashboard";
@@ -236,10 +234,7 @@ function Navigation() {
               </button>
               <button
                 className="action-btn logout-btn"
-                onClick={() => {
-                  logout();
-                  clearState();
-                }}
+                onClick={logout}
                 title="Logout"
                 aria-label="Logout"
               >

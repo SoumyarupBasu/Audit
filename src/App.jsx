@@ -1,12 +1,10 @@
 import { BrowserRouter } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import CustomFrameworkBuilder from "./pages/CustomFrameworkBuilder";
-import SuccessMessage from "./components/SuccessMessage";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { CustomFrameworkProvider } from "./context/CustomFrameworkContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
-import { AppStateProvider } from "./context/AppStateContext";
 import { NavigationProvider } from "./context/NavigationContext";
 import { AppRoutes } from "./routes/AppRoutes";
 import "./styles/framework.css";
@@ -25,13 +23,11 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <ThemeProvider>
-            <AppStateProvider>
-              <CustomFrameworkProvider>
-                <NavigationProvider>
-                  <AppContent />
-                </NavigationProvider>
-              </CustomFrameworkProvider>
-            </AppStateProvider>
+            <CustomFrameworkProvider>
+              <NavigationProvider>
+                <AppContent />
+              </NavigationProvider>
+            </CustomFrameworkProvider>
           </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>
@@ -50,7 +46,6 @@ function AppContent() {
 
       {/* Main content area */}
       <main className={isAuthenticated ? "main-content" : ""}>
-        <SuccessMessage />
         <AppRoutes />
       </main>
 

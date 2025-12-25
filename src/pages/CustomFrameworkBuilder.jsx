@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "../components/Icon";
 import { useCustomFramework } from "../context/CustomFrameworkContext";
-import { useAppState } from "../context/AppStateContext";
 import { exportCustomFrameworkToWord } from "../utils/wordExport";
 import "../styles/customFramework.css";
 
@@ -54,7 +53,9 @@ const availableFrameworks = [
 
 export default function CustomFrameworkBuilder() {
   const navigate = useNavigate();
-  const { setFrameworkForControlsView } = useAppState();
+  // Local state for framework controls - only used by this component
+  const [frameworkForControls, setFrameworkForControls] = useState(null);
+
   const {
     selectedControls,
     frameworkName,
@@ -106,8 +107,8 @@ export default function CustomFrameworkBuilder() {
     setShowAddControls(false);
 
     // Navigate to the framework controls page
-    setFrameworkForControlsView(framework);
-    navigate("/framework-controls");
+    setFrameworkForControls(framework);
+    navigate("/framework-controls", { state: { framework } });
   };
 
   const handleAddControlsClick = () => {
