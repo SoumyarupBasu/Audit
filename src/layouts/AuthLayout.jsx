@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import Icon from './Icon'
-import '../styles/auth.css'
+import { useState } from "react";
+import Icon from "../components/Icon";
+import "../styles/auth.css";
 
 /**
  * Reusable Authentication Layout Component
- * 
+ *
  * Props:
  * - title: Form title (e.g., "Welcome Back", "Create Account")
  * - subtitle: Form description
@@ -23,104 +23,107 @@ export default function AuthLayout({
   title,
   subtitle,
   fields = [],
-  buttonText = 'Submit',
+  buttonText = "Submit",
   onSubmit,
   isLoading = false,
-  errorMessage = '',
-  successMessage = '',
+  errorMessage = "",
+  successMessage = "",
   footerContent,
   backLink,
   theme,
-  onThemeToggle
+  onThemeToggle,
 }) {
   // Form state - dynamically created from fields
   const [formData, setFormData] = useState(() => {
-    const initial = {}
-    fields.forEach(field => {
-      initial[field.name] = field.defaultValue || ''
-    })
-    return initial
-  })
+    const initial = {};
+    fields.forEach((field) => {
+      initial[field.name] = field.defaultValue || "";
+    });
+    return initial;
+  });
 
-  const [errors, setErrors] = useState({})
-  const [showPassword, setShowPassword] = useState({})
+  const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState({});
 
   // Handle input change
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
-    const fieldValue = type === 'checkbox' ? checked : value
+    const { name, value, type, checked } = e.target;
+    const fieldValue = type === "checkbox" ? checked : value;
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: fieldValue
-    }))
+      [name]: fieldValue,
+    }));
 
     // Clear error for this field
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
-      }))
+        [name]: "",
+      }));
     }
-  }
+  };
 
   // Handle input blur - validate field
   const handleBlur = (e) => {
-    const { name, value } = e.target
-    const field = fields.find(f => f.name === name)
-    
+    const { name, value } = e.target;
+    const field = fields.find((f) => f.name === name);
+
     if (field && field.validate) {
-      const error = field.validate(value, formData)
+      const error = field.validate(value, formData);
       if (error) {
-        setErrors(prev => ({
+        setErrors((prev) => ({
           ...prev,
-          [name]: error
-        }))
+          [name]: error,
+        }));
       }
     }
-  }
+  };
 
   // Handle form submit
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Validate all fields
-    const newErrors = {}
-    fields.forEach(field => {
+    const newErrors = {};
+    fields.forEach((field) => {
       if (field.validate) {
-        const error = field.validate(formData[field.name], formData)
-        if (error) newErrors[field.name] = error
+        const error = field.validate(formData[field.name], formData);
+        if (error) newErrors[field.name] = error;
       }
-    })
+    });
 
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
+      setErrors(newErrors);
+      return;
     }
 
     // Call parent submit handler
     if (onSubmit) {
-      onSubmit(formData)
+      onSubmit(formData);
     }
-  }
+  };
 
   // Toggle password visibility
   const togglePasswordVisibility = (fieldName) => {
-    setShowPassword(prev => ({
+    setShowPassword((prev) => ({
       ...prev,
-      [fieldName]: !prev[fieldName]
-    }))
-  }
+      [fieldName]: !prev[fieldName],
+    }));
+  };
 
   // Render a single form field
   const renderField = (field) => {
-    const isPassword = field.type === 'password'
-    const showPwd = showPassword[field.name]
-    const inputType = isPassword ? (showPwd ? 'text' : 'password') : field.type
+    const isPassword = field.type === "password";
+    const showPwd = showPassword[field.name];
+    const inputType = isPassword ? (showPwd ? "text" : "password") : field.type;
 
     return (
       <div className="form-group" key={field.name}>
-        <label htmlFor={field.name} className={`form-label ${field.required ? 'required' : ''}`}>
+        <label
+          htmlFor={field.name}
+          className={`form-label ${field.required ? "required" : ""}`}
+        >
           {field.label}
         </label>
         <div className="input-wrapper">
@@ -133,7 +136,9 @@ export default function AuthLayout({
             type={inputType}
             id={field.name}
             name={field.name}
-            className={`form-input ${isPassword ? 'has-icon-right' : ''} ${errors[field.name] ? 'error' : ''}`}
+            className={`form-input ${isPassword ? "has-icon-right" : ""} ${
+              errors[field.name] ? "error" : ""
+            }`}
             placeholder={field.placeholder}
             value={formData[field.name]}
             onChange={handleChange}
@@ -149,9 +154,9 @@ export default function AuthLayout({
               onClick={() => togglePasswordVisibility(field.name)}
               role="button"
               tabIndex={0}
-              aria-label={showPwd ? 'Hide password' : 'Show password'}
+              aria-label={showPwd ? "Hide password" : "Show password"}
             >
-              <Icon name={showPwd ? 'eye-off' : 'eye'} size="18px" />
+              <Icon name={showPwd ? "eye-off" : "eye"} size="18px" />
             </div>
           )}
         </div>
@@ -163,8 +168,8 @@ export default function AuthLayout({
         )}
         {field.helperText && <p className="form-helper">{field.helperText}</p>}
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="auth-container">
@@ -173,10 +178,10 @@ export default function AuthLayout({
         <button
           className="auth-theme-toggle"
           onClick={onThemeToggle}
-          title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+          aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
         >
-          <Icon name={theme === 'light' ? 'moon' : 'sun'} size="20px" />
+          <Icon name={theme === "light" ? "moon" : "sun"} size="20px" />
         </button>
       )}
 
@@ -185,11 +190,13 @@ export default function AuthLayout({
         <div className="auth-visual-content">
           <div className="auth-logo-large">
             <div className="auth-logo-icon-large">
-              <Icon name="shield" size="64px" style={{ color: 'white' }} />
+              <Icon name="shield" size="64px" style={{ color: "white" }} />
             </div>
           </div>
           <h1 className="auth-visual-title">CYPHER SENTINEL</h1>
-          <p className="auth-visual-subtitle">AI-Powered Compliance Auditing Platform</p>
+          <p className="auth-visual-subtitle">
+            AI-Powered Compliance Auditing Platform
+          </p>
 
           <div className="auth-visual-features">
             <div className="auth-feature-item">
@@ -233,7 +240,7 @@ export default function AuthLayout({
               onClick={backLink.onClick}
               role="button"
               tabIndex={0}
-              onKeyPress={(e) => e.key === 'Enter' && backLink.onClick()}
+              onKeyPress={(e) => e.key === "Enter" && backLink.onClick()}
             >
               <Icon name="arrow-left" size="16px" />
               {backLink.text}
@@ -269,7 +276,7 @@ export default function AuthLayout({
             {/* Submit Button */}
             <button
               type="submit"
-              className={`auth-button ${isLoading ? 'loading' : ''}`}
+              className={`auth-button ${isLoading ? "loading" : ""}`}
               disabled={isLoading}
             >
               {!isLoading && buttonText}
@@ -277,9 +284,7 @@ export default function AuthLayout({
 
             {/* Footer Content */}
             {footerContent && (
-              <div className="auth-footer">
-                {footerContent}
-              </div>
+              <div className="auth-footer">{footerContent}</div>
             )}
           </form>
 
@@ -288,5 +293,5 @@ export default function AuthLayout({
         </div>
       </div>
     </div>
-  )
+  );
 }
