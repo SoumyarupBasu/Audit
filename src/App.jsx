@@ -1,9 +1,8 @@
 import { BrowserRouter } from "react-router-dom";
-import Navigation from "./components/Navigation";
-import CustomFrameworkBuilder from "./pages/CustomFrameworkBuilder";
 import ErrorBoundary from "./components/ErrorBoundary";
+import LayoutWrapper from "./layouts/LayoutWrapper";
 import { CustomFrameworkProvider } from "./context/CustomFrameworkContext";
-import { AuthProvider, useAuth } from "./context/AuthContext";
+import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { NavigationProvider } from "./context/NavigationContext";
 import { AppRoutes } from "./routes/AppRoutes";
@@ -25,33 +24,15 @@ function App() {
           <ThemeProvider>
             <CustomFrameworkProvider>
               <NavigationProvider>
-                <AppContent />
+                <LayoutWrapper>
+                  <AppRoutes />
+                </LayoutWrapper>
               </NavigationProvider>
             </CustomFrameworkProvider>
           </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>
     </ErrorBoundary>
-  );
-}
-
-// Clean app content component
-function AppContent() {
-  const { isAuthenticated } = useAuth();
-
-  return (
-    <div className="app-layout">
-      {/* Show navigation only for authenticated users */}
-      {isAuthenticated && <Navigation />}
-
-      {/* Main content area */}
-      <main className={isAuthenticated ? "main-content" : ""}>
-        <AppRoutes />
-      </main>
-
-      {/* Custom Framework Builder Modal */}
-      <CustomFrameworkBuilder />
-    </div>
   );
 }
 

@@ -3,6 +3,7 @@ import AuthLayout from "../layouts/AuthLayout";
 import { useAuth } from "../context/AuthContext";
 import { login as loginAPI } from "../services/authService";
 import "../styles/auth.css";
+import { Link } from "react-router-dom";
 
 export default function Login({
   onNavigate,
@@ -110,7 +111,7 @@ export default function Login({
         }}
       >
         Don't have an account?{" "}
-        <a
+        <Link
           className="auth-link"
           onClick={handleRegister}
           role="button"
@@ -118,7 +119,7 @@ export default function Login({
           onKeyPress={(e) => e.key === "Enter" && handleRegister()}
         >
           Register here
-        </a>
+        </Link>
       </div>
     </>
   );

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Icon from "../components/Icon";
 import "../styles/auth.css";
+import { Link } from "react-router-dom";
 
 /**
  * Reusable Authentication Layout Component
@@ -235,7 +236,7 @@ export default function AuthLayout({
         <div className="auth-form-container">
           {/* Back Link */}
           {backLink && (
-            <a
+            <Link
               className="auth-back-button"
               onClick={backLink.onClick}
               role="button"
@@ -244,7 +245,7 @@ export default function AuthLayout({
             >
               <Icon name="arrow-left" size="16px" />
               {backLink.text}
-            </a>
+            </Link>
           )}
 
           {/* Form Header */}
