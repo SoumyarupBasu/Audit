@@ -1,9 +1,10 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   // Configure server to handle SPA routing (all routes serve index.html)
   server: {
     // Enable history API fallback for development server
@@ -13,4 +14,4 @@ export default defineConfig({
   preview: {
     historyApiFallback: true,
   },
-})
+});
