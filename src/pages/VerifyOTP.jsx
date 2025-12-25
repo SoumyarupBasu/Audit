@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import AuthLayout from '../components/AuthLayout'
 import { useAuth } from '../context/AuthContext'
-import { resetPassword as resetPasswordAPI, resendOTP as resendOTPAPI } from '../services/authService'
+import { verifyOTP as verifyOTPAPI, resendOTP as resendOTPAPI } from '../services/authService'
 import '../styles/auth.css'
 
-export default function ResetPassword({ onNavigate, theme, onThemeToggle }) {
+export default function VerifyOTP({ onNavigate, theme, onThemeToggle, onVerifySuccess }) {
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
   const [resendCooldown, setResendCooldown] = useState(0)
-  const { getEmailForVerification, clearPendingEmail } = useAuth()
+  const { getEmailForVerification, clearPendingEmail, login } = useAuth()
 
   const email = getEmailForVerification()
 
-  // Redirect if no email is pending
+  // Redirect if no email is pending verification
   useEffect(() => {
     if (!email) {
-      onNavigate('forgot-password')
+      onNavigate('login')
     }
   }, [email, onNavigate])
 
@@ -28,14 +28,22 @@ export default function ResetPassword({ onNavigate, theme, onThemeToggle }) {
     }
   }, [resendCooldown])
 
-  // Validate password strength
-  const validatePassword = (password) => {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-    return passwordRegex.test(password)
-  }
-
   // Field configurations
   const fields = [
+    {
+      name: 'email',
+      label: 'Email Address',
+      type: 'email',
+      placeholder: 'Your email address',
+      icon: 'mail',
+      required: true,
+      defaultValue: email,
+      autoComplete: 'email',
+      validate: (value) => {
+        if (!value) return 'Email is required'
+        return ''
+      }
+    },
     {
       name: 'otp',
       label: 'Verification Code',
@@ -45,41 +53,10 @@ export default function ResetPassword({ onNavigate, theme, onThemeToggle }) {
       required: true,
       maxLength: 6,
       autoComplete: 'one-time-code',
-      helperText: `OTP sent to ${email}`,
+      helperText: 'Enter the 6-digit code sent to your email',
       validate: (value) => {
         if (!value) return 'OTP is required'
         if (!/^\d{6}$/.test(value)) return 'OTP must be 6 digits'
-        return ''
-      }
-    },
-    {
-      name: 'newPassword',
-      label: 'New Password',
-      type: 'password',
-      placeholder: 'Enter new password',
-      icon: 'lock',
-      required: true,
-      autoComplete: 'new-password',
-      helperText: 'Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char',
-      validate: (value) => {
-        if (!value) return 'New password is required'
-        if (!validatePassword(value)) {
-          return 'Password must be at least 8 characters with uppercase, lowercase, number, and special character'
-        }
-        return ''
-      }
-    },
-    {
-      name: 'confirmPassword',
-      label: 'Confirm Password',
-      type: 'password',
-      placeholder: 'Confirm new password',
-      icon: 'lock',
-      required: true,
-      autoComplete: 'new-password',
-      validate: (value, formData) => {
-        if (!value) return 'Please confirm your password'
-        if (value !== formData.newPassword) return 'Passwords do not match'
         return ''
       }
     }
@@ -91,19 +68,28 @@ export default function ResetPassword({ onNavigate, theme, onThemeToggle }) {
     setErrorMessage('')
 
     try {
-      await resetPasswordAPI(email, formData.otp, formData.newPassword, formData.confirmPassword)
-
+      const response = await verifyOTPAPI(formData.email, formData.otp)
+      
       // Clear pending email
       clearPendingEmail()
-
-      setSuccessMessage('Password reset successful! Redirecting to login...')
-
-      // Navigate to login
+      
+      // If response includes user and token, log them in
+      if (response.user && response.token) {
+        login(response.user, response.token)
+      }
+      
+      setSuccessMessage('Email verified successfully!')
+      
+      // Navigate to login or dashboard
       setTimeout(() => {
-        onNavigate('login')
-      }, 2000)
+        if (onVerifySuccess) {
+          onVerifySuccess(response)
+        } else {
+          onNavigate('login')
+        }
+      }, 1500)
     } catch (error) {
-      setErrorMessage(error.message || 'Failed to reset password. Please try again.')
+      setErrorMessage(error.message || 'Invalid OTP. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -116,14 +102,14 @@ export default function ResetPassword({ onNavigate, theme, onThemeToggle }) {
     try {
       await resendOTPAPI(email)
       setSuccessMessage('A new OTP has been sent to your email.')
-      setResendCooldown(60)
+      setResendCooldown(60) // 60 second cooldown
     } catch (error) {
       setErrorMessage(error.message || 'Failed to resend OTP. Please try again.')
     }
   }
 
-  // Handle back to login
-  const handleBackToLogin = () => {
+  // Handle login click
+  const handleLogin = () => {
     clearPendingEmail()
     onNavigate('login')
   }
@@ -131,7 +117,7 @@ export default function ResetPassword({ onNavigate, theme, onThemeToggle }) {
   // Footer content with resend link
   const footerContent = (
     <div style={{ textAlign: 'center' }}>
-      <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)' }}>
+      <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--spacing-sm)' }}>
         Didn't receive the code?{' '}
         {resendCooldown > 0 ? (
           <span style={{ color: 'var(--text-muted)' }}>
@@ -154,18 +140,19 @@ export default function ResetPassword({ onNavigate, theme, onThemeToggle }) {
 
   return (
     <AuthLayout
-      title="Reset Password"
-      subtitle="Enter the OTP sent to your email and create a new password"
+      title="Verify Your Email"
+      subtitle="Enter the verification code sent to your email"
       fields={fields}
-      buttonText="RESET PASSWORD"
+      buttonText="VERIFY"
       onSubmit={handleSubmit}
       isLoading={isLoading}
       errorMessage={errorMessage}
       successMessage={successMessage}
       footerContent={footerContent}
-      backLink={{ text: 'Back to Login', onClick: handleBackToLogin }}
+      backLink={{ text: 'Back to Login', onClick: handleLogin }}
       theme={theme}
       onThemeToggle={onThemeToggle}
     />
   )
 }
+
