@@ -1,13 +1,19 @@
 import { useState, useEffect } from "react";
-import AuthLayout from "../layouts/AuthLayout";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
   resetPassword as resetPasswordAPI,
   resendOTP as resendOTPAPI,
 } from "../services/authService";
-import "../styles/auth.css";
+import Icon from "../components/Icon";
 
-export default function ResetPassword({ onNavigate, theme, onThemeToggle }) {
+export default function ResetPassword() {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    otp: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -19,9 +25,9 @@ export default function ResetPassword({ onNavigate, theme, onThemeToggle }) {
   // Redirect if no email is pending
   useEffect(() => {
     if (!email) {
-      onNavigate("forgot-password");
+      navigate("/forgot-password");
     }
-  }, [email, onNavigate]);
+  }, [email, navigate]);
 
   // Countdown timer for resend cooldown
   useEffect(() => {
@@ -34,67 +40,19 @@ export default function ResetPassword({ onNavigate, theme, onThemeToggle }) {
     }
   }, [resendCooldown]);
 
-  // Validate password strength
-  const validatePassword = (password) => {
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return passwordRegex.test(password);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrorMessage("");
   };
 
-  // Field configurations
-  const fields = [
-    {
-      name: "otp",
-      label: "Verification Code",
-      type: "text",
-      placeholder: "Enter 6-digit OTP",
-      icon: "key",
-      required: true,
-      maxLength: 6,
-      autoComplete: "one-time-code",
-      helperText: `OTP sent to ${email}`,
-      validate: (value) => {
-        if (!value) return "OTP is required";
-        if (!/^\d{6}$/.test(value)) return "OTP must be 6 digits";
-        return "";
-      },
-    },
-    {
-      name: "newPassword",
-      label: "New Password",
-      type: "password",
-      placeholder: "Enter new password",
-      icon: "lock",
-      required: true,
-      autoComplete: "new-password",
-      helperText:
-        "Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char",
-      validate: (value) => {
-        if (!value) return "New password is required";
-        if (!validatePassword(value)) {
-          return "Password must be at least 8 characters with uppercase, lowercase, number, and special character";
-        }
-        return "";
-      },
-    },
-    {
-      name: "confirmPassword",
-      label: "Confirm Password",
-      type: "password",
-      placeholder: "Confirm new password",
-      icon: "lock",
-      required: true,
-      autoComplete: "new-password",
-      validate: (value, formData) => {
-        if (!value) return "Please confirm your password";
-        if (value !== formData.newPassword) return "Passwords do not match";
-        return "";
-      },
-    },
-  ];
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  // Handle form submission
-  const handleSubmit = async (formData) => {
+    if (formData.newPassword !== formData.confirmPassword) {
+      setErrorMessage("Passwords do not match");
+      return;
+    }
+
     setIsLoading(true);
     setErrorMessage("");
 
@@ -113,7 +71,7 @@ export default function ResetPassword({ onNavigate, theme, onThemeToggle }) {
 
       // Navigate to login
       setTimeout(() => {
-        onNavigate("login");
+        navigate("/login");
       }, 2000);
     } catch (error) {
       setErrorMessage(
@@ -139,55 +97,139 @@ export default function ResetPassword({ onNavigate, theme, onThemeToggle }) {
     }
   };
 
-  // Handle back to login
-  const handleBackToLogin = () => {
-    clearPendingEmail();
-    onNavigate("login");
-  };
+  return (
+    <>
+      {/* Form Header */}
+      <div className="auth-form-header">
+        <h2 className="auth-form-title">Reset Password</h2>
+        <p className="auth-form-description">
+          Enter the OTP sent to your email and create a new password
+        </p>
+      </div>
 
-  // Footer content with resend link
-  const footerContent = (
-    <div style={{ textAlign: "center" }}>
-      <div
-        style={{
-          fontSize: "var(--font-size-sm)",
-          color: "var(--text-secondary)",
-        }}
-      >
-        Didn't receive the code?{" "}
-        {resendCooldown > 0 ? (
-          <span style={{ color: "var(--text-muted)" }}>
-            Resend in {resendCooldown}s
-          </span>
-        ) : (
+      {/* Success Message */}
+      {successMessage && (
+        <div className="auth-message success">
+          <Icon name="check-circle" size="18px" />
+          <span>{successMessage}</span>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {errorMessage && (
+        <div className="auth-message error">
+          <Icon name="warning" size="18px" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
+
+      {/* Form */}
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label className="form-label">Verification Code</label>
+          <div className="input-wrapper">
+            <div className="input-icon">
+              <Icon name="key" size="20px" />
+            </div>
+            <input
+              type="text"
+              name="otp"
+              className="form-input"
+              placeholder="Enter 6-digit OTP"
+              value={formData.otp}
+              onChange={handleChange}
+              maxLength={6}
+              required
+            />
+          </div>
+          <small className="form-helper-text">OTP sent to {email}</small>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">New Password</label>
+          <div className="input-wrapper">
+            <div className="input-icon">
+              <Icon name="lock" size="20px" />
+            </div>
+            <input
+              type="password"
+              name="newPassword"
+              className="form-input"
+              placeholder="Enter new password"
+              value={formData.newPassword}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <small className="form-helper-text">
+            Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
+          </small>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Confirm Password</label>
+          <div className="input-wrapper">
+            <div className="input-icon">
+              <Icon name="lock" size="20px" />
+            </div>
+            <input
+              type="password"
+              name="confirmPassword"
+              className="form-input"
+              placeholder="Confirm new password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          className={`auth-button ${isLoading ? "loading" : ""}`}
+          disabled={isLoading}
+        >
+          {isLoading ? "Resetting..." : "RESET PASSWORD"}
+        </button>
+
+        <div className="auth-footer">
+          <div
+            style={{ textAlign: "center", marginBottom: "var(--spacing-md)" }}
+          >
+            <span
+              style={{
+                fontSize: "var(--font-size-sm)",
+                color: "var(--text-secondary)",
+              }}
+            >
+              Didn't receive the code?{" "}
+              {resendCooldown > 0 ? (
+                <span style={{ color: "var(--text-muted)" }}>
+                  Resend in {resendCooldown}s
+                </span>
+              ) : (
+                <a
+                  className="auth-link"
+                  onClick={handleResendOTP}
+                  role="button"
+                >
+                  Resend OTP
+                </a>
+              )}
+            </span>
+          </div>
           <a
             className="auth-link"
-            onClick={handleResendOTP}
+            onClick={() => {
+              clearPendingEmail();
+              navigate("/login");
+            }}
             role="button"
-            tabIndex={0}
-            onKeyPress={(e) => e.key === "Enter" && handleResendOTP()}
           >
-            Resend OTP
+            Back to Login
           </a>
-        )}
-      </div>
-    </div>
-  );
-
-  return (
-    <AuthLayout
-      title="Reset Password"
-      subtitle="Enter the OTP sent to your email and create a new password"
-      fields={fields}
-      buttonText="RESET PASSWORD"
-      onSubmit={handleSubmit}
-      isLoading={isLoading}
-      errorMessage={errorMessage}
-      successMessage={successMessage}
-      footerContent={footerContent}
-      backLink={{ text: "Back to Login", onClick: handleBackToLogin }}
-      theme={theme}
-      onThemeToggle={onThemeToggle}
-    />
+        </div>
+      </form>
+    </>
   );
 }

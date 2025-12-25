@@ -81,8 +81,15 @@
 }
 
 @keyframes floatPattern {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(20px, -20px) scale(1.05); }
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(20px, -20px) scale(1.05);
+  }
 }
 
 /* Decorative geometric shapes */
@@ -99,8 +106,13 @@
 }
 
 @keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .auth-visual-content {
@@ -116,6 +128,7 @@
     opacity: 0;
     transform: translateX(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -154,8 +167,15 @@
 }
 
 @keyframes floatLogo {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 /* Visual section typography */
@@ -198,15 +218,24 @@
   animation: fadeInUp 0.6s ease backwards;
 }
 
-.auth-feature-item:nth-child(1) { animation-delay: 0.2s; }
-.auth-feature-item:nth-child(2) { animation-delay: 0.4s; }
-.auth-feature-item:nth-child(3) { animation-delay: 0.6s; }
+.auth-feature-item:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.auth-feature-item:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.auth-feature-item:nth-child(3) {
+  animation-delay: 0.6s;
+}
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -267,6 +296,7 @@
     opacity: 0;
     transform: translateX(30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -280,8 +310,13 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .auth-form-title {
@@ -317,15 +352,24 @@
   animation: slideInUp 0.5s ease backwards;
 }
 
-.form-group:nth-child(1) { animation-delay: 0.3s; }
-.form-group:nth-child(2) { animation-delay: 0.4s; }
-.form-group:nth-child(3) { animation-delay: 0.5s; }
+.form-group:nth-child(1) {
+  animation-delay: 0.3s;
+}
+
+.form-group:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.form-group:nth-child(3) {
+  animation-delay: 0.5s;
+}
 
 @keyframes slideInUp {
   from {
     opacity: 0;
     transform: translateY(15px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -452,9 +496,19 @@
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
 }
 
 /* Checkbox */
@@ -560,7 +614,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Links */
@@ -643,6 +699,7 @@
     opacity: 0;
     transform: translateY(-15px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -734,7 +791,8 @@
   }
 
   .auth-visual-features {
-    display: none; /* Hide features on smaller screens */
+    display: none;
+    /* Hide features on smaller screens */
   }
 
   .auth-form-section {
@@ -932,9 +990,11 @@
   0% {
     transform: scale(0) rotate(45deg);
   }
+
   50% {
     transform: scale(1.2) rotate(45deg);
   }
+
   100% {
     transform: scale(1) rotate(45deg);
   }
@@ -943,4 +1003,3 @@
 .success-checkmark {
   animation: checkmark 0.5s ease;
 }
-

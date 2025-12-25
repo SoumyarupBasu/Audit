@@ -1,13 +1,8 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import AuthLayout from "../layouts/AuthLayout";
 
-// Import all page components
-import Login from "../pages/Login";
-import Register from "../pages/Register";
-import VerifyOTP from "../pages/VerifyOTP";
-import ForgotPassword from "../pages/ForgotPassword";
-import ResetPassword from "../pages/ResetPassword";
-import ResendOTP from "../pages/ResendOTP";
+// Import protected page components
 import Dashboard from "../pages/Dashboard";
 import UploadDocument from "../pages/UploadDocument";
 import UploadFramework from "../pages/UploadFramework";
@@ -23,70 +18,64 @@ import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 
 /**
- * Clean routing configuration without props drilling
- * All components now use contexts for their data needs
+ * Simple routing - auth routes use AuthLayout directly
  */
 export function AppRoutes() {
   const { isAuthenticated } = useAuth();
 
   return (
     <Routes>
-      {/* Public Routes - Only accessible when NOT authenticated */}
+      {/* Auth Routes - All use AuthLayout directly */}
       <Route
         path="/login"
         element={
           <PublicRoute>
-            <Login />
+            <AuthLayout />
           </PublicRoute>
         }
       />
-
       <Route
         path="/register"
         element={
           <PublicRoute>
-            <Register />
+            <AuthLayout />
           </PublicRoute>
         }
       />
-
       <Route
         path="/verify-otp"
         element={
           <PublicRoute>
-            <VerifyOTP />
+            <AuthLayout />
           </PublicRoute>
         }
       />
-
       <Route
         path="/forgot-password"
         element={
           <PublicRoute>
-            <ForgotPassword />
+            <AuthLayout />
           </PublicRoute>
         }
       />
-
       <Route
         path="/reset-password"
         element={
           <PublicRoute>
-            <ResetPassword />
+            <AuthLayout />
           </PublicRoute>
         }
       />
-
       <Route
         path="/resend-otp"
         element={
           <PublicRoute>
-            <ResendOTP />
+            <AuthLayout />
           </PublicRoute>
         }
       />
 
-      {/* Protected Routes - Only accessible when authenticated */}
+      {/* Protected Routes */}
       <Route
         path="/dashboard"
         element={
@@ -95,7 +84,6 @@ export function AppRoutes() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/upload"
         element={
@@ -104,7 +92,6 @@ export function AppRoutes() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/upload-framework"
         element={
@@ -113,7 +100,6 @@ export function AppRoutes() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/framework"
         element={
@@ -122,7 +108,6 @@ export function AppRoutes() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/framework-comparison"
         element={
@@ -131,7 +116,6 @@ export function AppRoutes() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/framework-controls"
         element={
@@ -140,7 +124,6 @@ export function AppRoutes() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/comparison-results"
         element={
@@ -149,7 +132,6 @@ export function AppRoutes() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/details"
         element={
@@ -158,7 +140,6 @@ export function AppRoutes() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/ai-extractor"
         element={
@@ -176,7 +157,7 @@ export function AppRoutes() {
         }
       />
 
-      {/* Catch all - redirect to appropriate page */}
+      {/* Catch all */}
       <Route
         path="*"
         element={

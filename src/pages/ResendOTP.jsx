@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import AuthLayout from "../layouts/AuthLayout";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { resendOTP as resendOTPAPI } from "../services/authService";
-import "../styles/auth.css";
+import Icon from "../components/Icon";
 
-export default function ResendOTP({ onNavigate, theme, onThemeToggle }) {
+export default function ResendOTP() {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -12,6 +14,13 @@ export default function ResendOTP({ onNavigate, theme, onThemeToggle }) {
   const { getEmailForVerification, setEmailForVerification } = useAuth();
 
   const storedEmail = getEmailForVerification();
+
+  // Set stored email in form data
+  useEffect(() => {
+    if (storedEmail) {
+      setFormData({ email: storedEmail });
+    }
+  }, [storedEmail]);
 
   // Countdown timer for cooldown
   useEffect(() => {
@@ -21,33 +30,14 @@ export default function ResendOTP({ onNavigate, theme, onThemeToggle }) {
     }
   }, [cooldown]);
 
-  // Validate email format
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrorMessage("");
   };
 
-  // Field configurations
-  const fields = [
-    {
-      name: "email",
-      label: "Email Address",
-      type: "email",
-      placeholder: "Enter your email",
-      icon: "mail",
-      required: true,
-      defaultValue: storedEmail,
-      autoComplete: "email",
-      validate: (value) => {
-        if (!value) return "Email is required";
-        if (!validateEmail(value)) return "Please enter a valid email address";
-        return "";
-      },
-    },
-  ];
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  // Handle form submission
-  const handleSubmit = async (formData) => {
     if (cooldown > 0) {
       setErrorMessage(
         `Please wait ${cooldown} seconds before requesting again.`
@@ -69,7 +59,7 @@ export default function ResendOTP({ onNavigate, theme, onThemeToggle }) {
 
       // Navigate to verify OTP after a short delay
       setTimeout(() => {
-        onNavigate("verify-otp");
+        navigate("/verify-otp");
       }, 2000);
     } catch (error) {
       setErrorMessage(error.message || "Failed to send OTP. Please try again.");
@@ -78,59 +68,94 @@ export default function ResendOTP({ onNavigate, theme, onThemeToggle }) {
     }
   };
 
-  // Handle back to login
-  const handleBackToLogin = () => {
-    onNavigate("login");
-  };
+  return (
+    <>
+      {/* Form Header */}
+      <div className="auth-form-header">
+        <h2 className="auth-form-title">Resend OTP</h2>
+        <p className="auth-form-description">
+          Enter your email address to receive a new verification code
+        </p>
+      </div>
 
-  // Footer content
-  const footerContent = (
-    <div style={{ textAlign: "center" }}>
-      {cooldown > 0 && (
-        <div
-          style={{
-            fontSize: "var(--font-size-sm)",
-            color: "var(--text-muted)",
-            marginBottom: "var(--spacing-sm)",
-          }}
-        >
-          You can request again in {cooldown} seconds
+      {/* Success Message */}
+      {successMessage && (
+        <div className="auth-message success">
+          <Icon name="check-circle" size="18px" />
+          <span>{successMessage}</span>
         </div>
       )}
-      <div
-        style={{
-          fontSize: "var(--font-size-sm)",
-          color: "var(--text-secondary)",
-        }}
-      >
-        Remember your password?{" "}
-        <a
-          className="auth-link"
-          onClick={handleBackToLogin}
-          role="button"
-          tabIndex={0}
-          onKeyPress={(e) => e.key === "Enter" && handleBackToLogin()}
-        >
-          Login here
-        </a>
-      </div>
-    </div>
-  );
 
-  return (
-    <AuthLayout
-      title="Resend OTP"
-      subtitle="Enter your email address to receive a new verification code"
-      fields={fields}
-      buttonText={cooldown > 0 ? `WAIT ${cooldown}s` : "SEND OTP"}
-      onSubmit={handleSubmit}
-      isLoading={isLoading}
-      errorMessage={errorMessage}
-      successMessage={successMessage}
-      footerContent={footerContent}
-      backLink={{ text: "Back to Login", onClick: handleBackToLogin }}
-      theme={theme}
-      onThemeToggle={onThemeToggle}
-    />
+      {/* Error Message */}
+      {errorMessage && (
+        <div className="auth-message error">
+          <Icon name="warning" size="18px" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
+
+      {/* Form */}
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label className="form-label">Email Address</label>
+          <div className="input-wrapper">
+            <div className="input-icon">
+              <Icon name="mail" size="20px" />
+            </div>
+            <input
+              type="email"
+              name="email"
+              className="form-input"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          className={`auth-button ${isLoading ? "loading" : ""}`}
+          disabled={isLoading || cooldown > 0}
+        >
+          {cooldown > 0
+            ? `WAIT ${cooldown}s`
+            : isLoading
+            ? "Sending..."
+            : "SEND OTP"}
+        </button>
+
+        <div className="auth-footer">
+          {cooldown > 0 && (
+            <div
+              style={{
+                fontSize: "var(--font-size-sm)",
+                color: "var(--text-muted)",
+                marginBottom: "var(--spacing-sm)",
+                textAlign: "center",
+              }}
+            >
+              You can request again in {cooldown} seconds
+            </div>
+          )}
+          <div
+            style={{
+              fontSize: "var(--font-size-sm)",
+              color: "var(--text-secondary)",
+            }}
+          >
+            Remember your password?{" "}
+            <a
+              className="auth-link"
+              onClick={() => navigate("/login")}
+              role="button"
+            >
+              Login here
+            </a>
+          </div>
+        </div>
+      </form>
+    </>
   );
 }

@@ -1,41 +1,24 @@
 import { useState } from "react";
-import AuthLayout from "../layouts/AuthLayout";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { forgotPassword as forgotPasswordAPI } from "../services/authService";
-import "../styles/auth.css";
+import Icon from "../components/Icon";
 
-export default function ForgotPassword({ onNavigate, theme, onThemeToggle }) {
+export default function ForgotPassword() {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const { setEmailForVerification } = useAuth();
 
-  // Validate email format
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrorMessage("");
   };
 
-  // Field configurations
-  const fields = [
-    {
-      name: "email",
-      label: "Email Address",
-      type: "email",
-      placeholder: "Enter your email",
-      icon: "mail",
-      required: true,
-      autoComplete: "email",
-      validate: (value) => {
-        if (!value) return "Email is required";
-        if (!validateEmail(value)) return "Please enter a valid email address";
-        return "";
-      },
-    },
-  ];
-
-  // Handle form submission
-  const handleSubmit = async (formData) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setIsLoading(true);
     setErrorMessage("");
 
@@ -49,7 +32,7 @@ export default function ForgotPassword({ onNavigate, theme, onThemeToggle }) {
 
       // Navigate to reset password page
       setTimeout(() => {
-        onNavigate("reset-password");
+        navigate("/reset-password");
       }, 1500);
     } catch (error) {
       setErrorMessage(error.message || "Failed to send OTP. Please try again.");
@@ -58,46 +41,79 @@ export default function ForgotPassword({ onNavigate, theme, onThemeToggle }) {
     }
   };
 
-  // Handle back to login
-  const handleBackToLogin = () => {
-    onNavigate("login");
-  };
-
-  // Footer content
-  const footerContent = (
-    <div
-      style={{
-        fontSize: "var(--font-size-sm)",
-        color: "var(--text-secondary)",
-      }}
-    >
-      Remember your password?{" "}
-      <a
-        className="auth-link"
-        onClick={handleBackToLogin}
-        role="button"
-        tabIndex={0}
-        onKeyPress={(e) => e.key === "Enter" && handleBackToLogin()}
-      >
-        Login here
-      </a>
-    </div>
-  );
-
   return (
-    <AuthLayout
-      title="Forgot Password?"
-      subtitle="Enter your email address and we'll send you an OTP to reset your password"
-      fields={fields}
-      buttonText="SEND OTP"
-      onSubmit={handleSubmit}
-      isLoading={isLoading}
-      errorMessage={errorMessage}
-      successMessage={successMessage}
-      footerContent={footerContent}
-      backLink={{ text: "Back to Login", onClick: handleBackToLogin }}
-      theme={theme}
-      onThemeToggle={onThemeToggle}
-    />
+    <>
+      {/* Form Header */}
+      <div className="auth-form-header">
+        <h2 className="auth-form-title">Forgot Password?</h2>
+        <p className="auth-form-description">
+          Enter your email address and we'll send you an OTP to reset your
+          password
+        </p>
+      </div>
+
+      {/* Success Message */}
+      {successMessage && (
+        <div className="auth-message success">
+          <Icon name="check-circle" size="18px" />
+          <span>{successMessage}</span>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {errorMessage && (
+        <div className="auth-message error">
+          <Icon name="warning" size="18px" />
+          <span>{errorMessage}</span>
+        </div>
+      )}
+
+      {/* Form */}
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label className="form-label">Email Address</label>
+          <div className="input-wrapper">
+            <div className="input-icon">
+              <Icon name="mail" size="20px" />
+            </div>
+            <input
+              type="email"
+              name="email"
+              className="form-input"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          className={`auth-button ${isLoading ? "loading" : ""}`}
+          disabled={isLoading}
+        >
+          {isLoading ? "Sending OTP..." : "SEND OTP"}
+        </button>
+
+        <div className="auth-footer">
+          <div
+            style={{
+              fontSize: "var(--font-size-sm)",
+              color: "var(--text-secondary)",
+            }}
+          >
+            Remember your password?{" "}
+            <a
+              className="auth-link"
+              onClick={() => navigate("/login")}
+              role="button"
+            >
+              Login here
+            </a>
+          </div>
+        </div>
+      </form>
+    </>
   );
 }
