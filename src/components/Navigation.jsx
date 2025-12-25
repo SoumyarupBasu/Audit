@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
+import { useAppState } from "../context/AppStateContext";
 import Icon from "./Icon";
 import "../styles/navigation.css";
 
-function Navigation({ onThemeToggle, onLogout, theme }) {
+function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const { logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+  const { clearState } = useAppState();
 
   // Get current page from location
   const currentPage = location.pathname.replace("/", "") || "dashboard";
@@ -219,7 +225,7 @@ function Navigation({ onThemeToggle, onLogout, theme }) {
             <div className="sidebar-actions">
               <button
                 className="action-btn theme-toggle"
-                onClick={onThemeToggle}
+                onClick={toggleTheme}
                 title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
                 aria-label={`Switch to ${
                   theme === "light" ? "dark" : "light"
@@ -228,17 +234,18 @@ function Navigation({ onThemeToggle, onLogout, theme }) {
                 <Icon name={theme === "light" ? "moon" : "sun"} size="18px" />
                 <span className="action-label">Theme</span>
               </button>
-              {onLogout && (
-                <button
-                  className="action-btn logout-btn"
-                  onClick={onLogout}
-                  title="Logout"
-                  aria-label="Logout"
-                >
-                  <Icon name="logout" size="18px" />
-                  <span className="action-label">Logout</span>
-                </button>
-              )}
+              <button
+                className="action-btn logout-btn"
+                onClick={() => {
+                  logout();
+                  clearState();
+                }}
+                title="Logout"
+                aria-label="Logout"
+              >
+                <Icon name="logout" size="18px" />
+                <span className="action-label">Logout</span>
+              </button>
             </div>
           </div>
         </div>

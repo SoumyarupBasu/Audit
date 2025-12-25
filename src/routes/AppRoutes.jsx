@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 // Import all page components
@@ -23,41 +23,11 @@ import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 
 /**
- * Main routing configuration for the application
- * Handles both public (authentication) and protected routes
+ * Clean routing configuration without props drilling
+ * All components now use contexts for their data needs
  */
-export function AppRoutes({
-  selectedFile,
-  setSelectedFile,
-  selectedFramework,
-  setSelectedFramework,
-  uploadedFrameworks,
-  setUploadedFrameworks,
-  currentUploadedFramework,
-  setCurrentUploadedFramework,
-  frameworkForControls,
-  setFrameworkForControls,
-  comparisonJobId,
-  setComparisonJobId,
-  comparisonFramework,
-  setComparisonFramework,
-  successMessage,
-  setSuccessMessage,
-  theme,
-  setTheme,
-  handleFileUpload,
-  handleFrameworkSelect,
-  handleFrameworkUpload,
-  handleFrameworkComparison,
-  handleViewControls,
-  handleComparisonComplete,
-  handleLogout,
-}) {
+export function AppRoutes() {
   const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-
-  // Create navigation handlers that use React Router
-  const createNavigationHandler = (path) => () => navigate(path);
 
   return (
     <Routes>
@@ -66,13 +36,7 @@ export function AppRoutes({
         path="/login"
         element={
           <PublicRoute>
-            <Login
-              onLoginSuccess={createNavigationHandler("/dashboard")}
-              successMessage={successMessage}
-              setSuccessMessage={setSuccessMessage}
-              theme={theme}
-              setTheme={setTheme}
-            />
+            <Login />
           </PublicRoute>
         }
       />
@@ -81,11 +45,7 @@ export function AppRoutes({
         path="/register"
         element={
           <PublicRoute>
-            <Register
-              onRegisterSuccess={createNavigationHandler("/verify-otp")}
-              theme={theme}
-              setTheme={setTheme}
-            />
+            <Register />
           </PublicRoute>
         }
       />
@@ -94,11 +54,7 @@ export function AppRoutes({
         path="/verify-otp"
         element={
           <PublicRoute>
-            <VerifyOTP
-              onVerificationSuccess={createNavigationHandler("/dashboard")}
-              theme={theme}
-              setTheme={setTheme}
-            />
+            <VerifyOTP />
           </PublicRoute>
         }
       />
@@ -107,11 +63,7 @@ export function AppRoutes({
         path="/forgot-password"
         element={
           <PublicRoute>
-            <ForgotPassword
-              onSuccess={createNavigationHandler("/resend-otp")}
-              theme={theme}
-              setTheme={setTheme}
-            />
+            <ForgotPassword />
           </PublicRoute>
         }
       />
@@ -120,11 +72,7 @@ export function AppRoutes({
         path="/reset-password"
         element={
           <PublicRoute>
-            <ResetPassword
-              onSuccess={createNavigationHandler("/login")}
-              theme={theme}
-              setTheme={setTheme}
-            />
+            <ResetPassword />
           </PublicRoute>
         }
       />
@@ -133,11 +81,7 @@ export function AppRoutes({
         path="/resend-otp"
         element={
           <PublicRoute>
-            <ResendOTP
-              onSuccess={createNavigationHandler("/reset-password")}
-              theme={theme}
-              setTheme={setTheme}
-            />
+            <ResendOTP />
           </PublicRoute>
         }
       />
@@ -147,11 +91,7 @@ export function AppRoutes({
         path="/dashboard"
         element={
           <ProtectedRoute>
-            <Dashboard
-              onLogout={handleLogout}
-              theme={theme}
-              setTheme={setTheme}
-            />
+            <Dashboard />
           </ProtectedRoute>
         }
       />
@@ -160,20 +100,7 @@ export function AppRoutes({
         path="/upload"
         element={
           <ProtectedRoute>
-            <UploadDocument
-              selectedFile={selectedFile}
-              onFileUpload={(file) => {
-                handleFileUpload(file);
-                navigate("/framework");
-              }}
-              onComparisonComplete={(jobId, framework) => {
-                handleComparisonComplete(jobId, framework);
-                navigate("/comparison-results");
-              }}
-              onLogout={handleLogout}
-              theme={theme}
-              setTheme={setTheme}
-            />
+            <UploadDocument />
           </ProtectedRoute>
         }
       />
@@ -182,15 +109,7 @@ export function AppRoutes({
         path="/upload-framework"
         element={
           <ProtectedRoute>
-            <UploadFramework
-              onFrameworkUpload={(frameworkData) => {
-                handleFrameworkUpload(frameworkData);
-                navigate("/framework-comparison");
-              }}
-              onLogout={handleLogout}
-              theme={theme}
-              setTheme={setTheme}
-            />
+            <UploadFramework />
           </ProtectedRoute>
         }
       />
@@ -199,23 +118,7 @@ export function AppRoutes({
         path="/framework"
         element={
           <ProtectedRoute>
-            <FrameworkSelection
-              selectedFile={selectedFile}
-              selectedFramework={selectedFramework}
-              uploadedFrameworks={uploadedFrameworks}
-              onFrameworkSelect={(framework) => {
-                handleFrameworkSelect(framework);
-                navigate("/details");
-              }}
-              onSeeControls={(framework) => {
-                handleViewControls(framework);
-                navigate("/framework-controls");
-              }}
-              onBack={createNavigationHandler("/upload")}
-              onLogout={handleLogout}
-              theme={theme}
-              setTheme={setTheme}
-            />
+            <FrameworkSelection />
           </ProtectedRoute>
         }
       />
@@ -224,22 +127,7 @@ export function AppRoutes({
         path="/framework-comparison"
         element={
           <ProtectedRoute>
-            <FrameworkComparison
-              uploadedFramework={currentUploadedFramework}
-              onDocumentUpload={(
-                documentFile,
-                customFramework,
-                similarFrameworks
-              ) => {
-                setSelectedFile(documentFile);
-                setSelectedFramework(customFramework);
-                navigate("/details");
-              }}
-              onBack={createNavigationHandler("/upload-framework")}
-              onLogout={handleLogout}
-              theme={theme}
-              setTheme={setTheme}
-            />
+            <FrameworkComparison />
           </ProtectedRoute>
         }
       />
@@ -248,13 +136,7 @@ export function AppRoutes({
         path="/framework-controls"
         element={
           <ProtectedRoute>
-            <FrameworkControls
-              framework={frameworkForControls}
-              onBack={createNavigationHandler("/framework")}
-              onLogout={handleLogout}
-              theme={theme}
-              setTheme={setTheme}
-            />
+            <FrameworkControls />
           </ProtectedRoute>
         }
       />
@@ -263,14 +145,7 @@ export function AppRoutes({
         path="/comparison-results"
         element={
           <ProtectedRoute>
-            <ComparisonResults
-              jobId={comparisonJobId}
-              framework={comparisonFramework}
-              onBack={createNavigationHandler("/upload")}
-              onLogout={handleLogout}
-              theme={theme}
-              setTheme={setTheme}
-            />
+            <ComparisonResults />
           </ProtectedRoute>
         }
       />
@@ -279,15 +154,7 @@ export function AppRoutes({
         path="/details"
         element={
           <ProtectedRoute>
-            <FrameworkDetails
-              selectedFramework={selectedFramework}
-              selectedFile={selectedFile}
-              uploadedFrameworks={uploadedFrameworks}
-              onBack={createNavigationHandler("/framework-comparison")}
-              onLogout={handleLogout}
-              theme={theme}
-              setTheme={setTheme}
-            />
+            <FrameworkDetails />
           </ProtectedRoute>
         }
       />
@@ -296,15 +163,7 @@ export function AppRoutes({
         path="/ai-extractor"
         element={
           <ProtectedRoute>
-            <AIFrameworkExtractor
-              onFrameworkCreated={(framework) => {
-                console.log("AI Framework created:", framework);
-                // Optionally navigate to frameworks after creation
-              }}
-              onLogout={handleLogout}
-              theme={theme}
-              setTheme={setTheme}
-            />
+            <AIFrameworkExtractor />
           </ProtectedRoute>
         }
       />
