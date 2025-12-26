@@ -5,28 +5,6 @@ import "../styles/framework.css";
 
 const API_BASE = "http://localhost:3001";
 
-function Breadcrumbs() {
-  const navigate = useNavigate();
-
-  return (
-    <div className="crumbs">
-      <span className="crumb-link" onClick={() => navigate("/dashboard")}>
-        Dashboard
-      </span>
-      <span className="sep">/</span>
-      <span className="crumb-link" onClick={() => navigate("/dashboard")}>
-        Documents
-      </span>
-      <span className="sep">/</span>
-      <span className="crumb-link" onClick={() => navigate("/upload")}>
-        Upload Document
-      </span>
-      <span className="sep">/</span>
-      <span className="muted">Framework Selection</span>
-    </div>
-  );
-}
-
 function Section({ title, right, children }) {
   return (
     <div className="section">
@@ -1194,31 +1172,7 @@ export default function FrameworkSelection() {
   return (
     <div className="layout-single">
       <main className="content">
-        <header className="page-head">
-          <div className="container head-grid">
-            <div className="page-title">Select Framework</div>
-            <div className="page-actions">
-              <button
-                className="primary"
-                onClick={() => navigate("/ai-extractor")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  background: "linear-gradient(135deg, #8b5cf6, #6366f1)",
-                }}
-              >
-                🤖 AI Extract Framework
-              </button>
-              <button className="ghost" onClick={handleBack}>
-                ← BACK
-              </button>
-            </div>
-            <Breadcrumbs />
-          </div>
-        </header>
-
-        <div className="container stack gap-lg">
+        <div className="stack gap-lg">
           <Section title="Document Information">
             <div className="file-info">
               <div className="file-icon">📄</div>

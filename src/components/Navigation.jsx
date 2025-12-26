@@ -29,13 +29,6 @@ function Navigation() {
         description: "Manage users & roles",
       },
       {
-        id: "frameworks",
-        title: "Frameworks",
-        icon: "book",
-        path: "/frameworks",
-        description: "Manage compliance frameworks",
-      },
-      {
         id: "reports",
         title: "Reports",
         icon: "chart",

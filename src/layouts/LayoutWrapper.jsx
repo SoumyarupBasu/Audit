@@ -64,7 +64,6 @@ function LayoutWrapper({ children }) {
         breadcrumbs: [
           { label: "Dashboard", path: "/dashboard" },
           { label: "Documents", path: "/dashboard" },
-          { label: "Upload Document", path: "/upload" },
           { label: "Framework Selection", active: true },
         ],
         actions: [

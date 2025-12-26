@@ -29,12 +29,20 @@ class ErrorBoundary extends React.Component {
           <div className="error-container">
             <h2>Something went wrong</h2>
             <p>We're sorry, but something unexpected happened.</p>
-            <button
-              onClick={() => window.location.reload()}
-              className="error-reload-btn"
-            >
-              Reload Page
-            </button>
+            <div className="">
+              <button
+                onClick={() => window.location.reload()}
+                className="error-reload-btn"
+              >
+                Reload Page
+              </button>
+              <button
+                onClick={() => window.history.back()}
+                className="back-btn"
+              >
+                Go Back
+              </button>
+            </div>
             {process.env.NODE_ENV === "development" && this.state.errorInfo && (
               <details className="error-details">
                 <summary>Error Details (Development)</summary>
