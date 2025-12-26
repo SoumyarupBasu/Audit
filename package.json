@@ -9,7 +9,10 @@
     "dev:all": "concurrently \"npm run dev\" \"npm run server\"",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate:ico": "npx svgexport public/favicon.svg public/favicon.ico 64:64",
+    "generate:logo192": "npx svgexport public/favicon.svg public/logo192.png 192:192",
+    "generate:logo512": "npx svgexport public/favicon.svg public/logo512.png 512:512"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
