@@ -3,44 +3,44 @@
  * Handles all authentication-related API calls
  */
 
-const API_BASE_URL = 'http://192.168.1.21:3000/api/auth'
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api`;
 
 /**
  * Helper function to make API requests
  */
 async function apiRequest(endpoint, options = {}) {
-  const url = `${API_BASE_URL}${endpoint}`
-  
+  const url = `${API_BASE_URL}${endpoint}`;
+
   const config = {
     headers: {
-      'Content-Type': 'application/json',
-      ...options.headers
+      "Content-Type": "application/json",
+      ...options.headers,
     },
-    ...options
-  }
+    ...options,
+  };
 
   try {
-    const response = await fetch(url, config)
-    const data = await response.json()
+    const response = await fetch(url, config);
+    const data = await response.json();
 
     if (!response.ok) {
       throw {
         status: response.status,
-        message: data.message || data.error || 'Something went wrong',
-        data
-      }
+        message: data.message || data.error || "Something went wrong",
+        data,
+      };
     }
 
-    return data
+    return data;
   } catch (error) {
     if (error.status) {
-      throw error
+      throw error;
     }
     throw {
       status: 500,
-      message: error.message || 'Network error. Please check your connection.',
-      data: null
-    }
+      message: error.message || "Network error. Please check your connection.",
+      data: null,
+    };
   }
 }
 
@@ -49,10 +49,10 @@ async function apiRequest(endpoint, options = {}) {
  * POST /api/auth/login
  */
 export async function login(email, password) {
-  return apiRequest('/login', {
-    method: 'POST',
-    body: JSON.stringify({ email, password })
-  })
+  return apiRequest("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
 }
 
 /**
@@ -60,10 +60,10 @@ export async function login(email, password) {
  * POST /api/auth/register
  */
 export async function register(name, email, phone, password) {
-  return apiRequest('/register', {
-    method: 'POST',
-    body: JSON.stringify({ name, email, phone, password })
-  })
+  return apiRequest("/auth/register", {
+    method: "POST",
+    body: JSON.stringify({ name, email, phone, password }),
+  });
 }
 
 /**
@@ -71,10 +71,10 @@ export async function register(name, email, phone, password) {
  * POST /api/auth/verify-otp
  */
 export async function verifyOTP(email, otp) {
-  return apiRequest('/verify-otp', {
-    method: 'POST',
-    body: JSON.stringify({ email, otp })
-  })
+  return apiRequest("/auth/verify-otp", {
+    method: "POST",
+    body: JSON.stringify({ email, otp }),
+  });
 }
 
 /**
@@ -82,21 +82,21 @@ export async function verifyOTP(email, otp) {
  * POST /api/auth/forgot-password
  */
 export async function forgotPassword(email) {
-  return apiRequest('/forgot-password', {
-    method: 'POST',
-    body: JSON.stringify({ email })
-  })
+  return apiRequest("/auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
 }
 
 /**
  * Reset password with OTP
  * POST /api/auth/reset-password
  */
-export async function resetPassword(email, otp, newPassword, confirmPassword) {
-  return apiRequest('/reset-password', {
-    method: 'POST',
-    body: JSON.stringify({ email, otp, newPassword, confirmPassword })
-  })
+export async function resetPassword({ email, otp, password }) {
+  return apiRequest("/auth/reset-password", {
+    method: "POST",
+    body: JSON.stringify({ email, otp, password }),
+  });
 }
 
 /**
@@ -104,10 +104,10 @@ export async function resetPassword(email, otp, newPassword, confirmPassword) {
  * POST /api/auth/resend-otp
  */
 export async function resendOTP(email) {
-  return apiRequest('/resend-otp', {
-    method: 'POST',
-    body: JSON.stringify({ email })
-  })
+  return apiRequest("/auth/resend-otp", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
 }
 
 // Export all functions as default object
@@ -117,6 +117,5 @@ export default {
   verifyOTP,
   forgotPassword,
   resetPassword,
-  resendOTP
-}
-
+  resendOTP,
+};
