@@ -16,6 +16,7 @@ import AIFrameworkExtractor from "../pages/AIFrameworkExtractor";
 // Import route protection components
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
+import AllUsers from "../pages/AllUsers";
 
 /**
  * Simple routing - auth routes use AuthLayout directly
@@ -81,6 +82,14 @@ export function AppRoutes() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/users"
+        element={
+          <ProtectedRoute>
+            <AllUsers />
           </ProtectedRoute>
         }
       />

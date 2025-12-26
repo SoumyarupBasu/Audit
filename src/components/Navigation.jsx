@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import Icon from "./Icon";
@@ -9,7 +9,6 @@ function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
   const location = useLocation();
-  const navigate = useNavigate();
   const { logout, user } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
@@ -26,21 +25,8 @@ function Navigation() {
         id: "users",
         title: "User Management",
         icon: "user",
+        path: "/users",
         description: "Manage users & roles",
-        children: [
-          {
-            id: "all-users",
-            title: "All Users",
-            icon: "users",
-            path: "/users",
-          },
-          {
-            id: "experts",
-            title: "Experts",
-            icon: "shield",
-            path: "/experts",
-          },
-        ],
       },
       {
         id: "frameworks",
@@ -165,14 +151,12 @@ function Navigation() {
       if (item.path === "/reports" || item.path === "/settings") {
         alert(`${item.title} page - Coming soon!`);
       } else {
-        navigate(item.path);
         setIsOpen(false);
       }
     }
   }
 
-  function handleSubMenuClick(subItem) {
-    navigate(subItem.path);
+  function handleSubMenuClick() {
     setIsOpen(false);
   }
 
@@ -235,20 +219,20 @@ function Navigation() {
           <div className="nav-menu">
             {menuItems.map((item) => (
               <div key={item.id} className="nav-item">
-                <div
-                  className={`nav-link ${isActive(item.path) ? "active" : ""} ${
-                    activeMenu === item.id ? "expanded" : ""
-                  }`}
-                  onClick={() => handleMenuClick(item)}
-                >
-                  <div className="nav-icon">
-                    <Icon name={item.icon} size="20px" />
-                  </div>
-                  <div className="nav-content">
-                    <div className="nav-title">{item.title}</div>
-                    <div className="nav-description">{item.description}</div>
-                  </div>
-                  {item.children && (
+                {item.children ? (
+                  <div
+                    className={`nav-link ${
+                      activeMenu === item.id ? "expanded" : ""
+                    }`}
+                    onClick={() => handleMenuClick(item)}
+                  >
+                    <div className="nav-icon">
+                      <Icon name={item.icon} size="20px" />
+                    </div>
+                    <div className="nav-content">
+                      <div className="nav-title">{item.title}</div>
+                      <div className="nav-description">{item.description}</div>
+                    </div>
                     <div className="nav-arrow">
                       <Icon
                         name={
@@ -257,24 +241,56 @@ function Navigation() {
                         size="12px"
                       />
                     </div>
-                  )}
-                </div>
+                  </div>
+                ) : item.path === "/reports" || item.path === "/settings" ? (
+                  <div
+                    className={`nav-link ${
+                      isActive(item.path) ? "active" : ""
+                    }`}
+                    onClick={() => handleMenuClick(item)}
+                  >
+                    <div className="nav-icon">
+                      <Icon name={item.icon} size="20px" />
+                    </div>
+                    <div className="nav-content">
+                      <div className="nav-title">{item.title}</div>
+                      <div className="nav-description">{item.description}</div>
+                    </div>
+                  </div>
+                ) : (
+                  <Link
+                    to={item.path}
+                    className={`nav-link ${
+                      isActive(item.path) ? "active" : ""
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <div className="nav-icon">
+                      <Icon name={item.icon} size="20px" />
+                    </div>
+                    <div className="nav-content">
+                      <div className="nav-title">{item.title}</div>
+                      <div className="nav-description">{item.description}</div>
+                    </div>
+                  </Link>
+                )}
 
                 {item.children && activeMenu === item.id && (
                   <div className="nav-submenu">
                     {item.children.map((subItem) => (
-                      <div
+                      <Link
                         key={subItem.id}
+                        to={subItem.path}
                         className={`nav-sublink ${
                           isActive(subItem.path) ? "active" : ""
                         }`}
-                        onClick={() => handleSubMenuClick(subItem)}
+                        onClick={handleSubMenuClick}
                       >
                         <div className="nav-subicon">
                           <Icon name={subItem.icon} size="16px" />
                         </div>
                         <div className="nav-subtitle">{subItem.title}</div>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 )}
