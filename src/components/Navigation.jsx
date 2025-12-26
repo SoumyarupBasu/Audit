@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import Icon from "./Icon";
@@ -9,94 +9,147 @@ function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
   const location = useLocation();
-  const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
-  // Get current page from location
-  const currentPage = location.pathname.replace("/", "") || "dashboard";
+  const navigationConfig = {
+    admin: [
+      {
+        id: "dashboard",
+        title: "Dashboard",
+        icon: "dashboard",
+        path: "/dashboard",
+        description: "Admin overview & analytics",
+      },
+      {
+        id: "users",
+        title: "User Management",
+        icon: "user",
+        path: "/users",
+        description: "Manage users & roles",
+      },
+      {
+        id: "reports",
+        title: "Reports",
+        icon: "chart",
+        path: "/reports",
+        description: "System-wide reports",
+      },
+      {
+        id: "settings",
+        title: "Settings",
+        icon: "settings",
+        path: "/settings",
+        description: "Admin settings",
+      },
+    ],
 
-  const menuItems = [
-    {
-      id: "dashboard",
-      title: "Dashboard",
-      icon: "dashboard",
-      path: "/dashboard",
-      description: "Overview and analytics",
-    },
-    {
-      id: "documents",
-      title: "Documents",
-      icon: "document",
-      description: "Document management",
-      children: [
-        {
-          id: "upload",
-          title: "Upload Document",
-          icon: "upload",
-          path: "/upload",
-        },
-        {
-          id: "analyze",
-          title: "Analyze Document",
-          icon: "search",
-          path: "/framework",
-        },
-      ],
-    },
-    {
-      id: "frameworks",
-      title: "Frameworks",
-      icon: "shield",
-      description: "Compliance frameworks",
-      children: [
-        {
-          id: "upload-framework",
-          title: "Upload Framework",
-          icon: "upload",
-          path: "/upload-framework",
-        },
-        {
-          id: "browse-frameworks",
-          title: "Browse Frameworks",
-          icon: "book",
-          path: "/framework",
-        },
-      ],
-    },
-    {
-      id: "reports",
-      title: "Reports",
-      icon: "chart",
-      path: "/reports",
-      description: "Compliance reports",
-    },
-    {
-      id: "settings",
-      title: "Settings",
-      icon: "settings",
-      path: "/settings",
-      description: "Application settings",
-    },
-  ];
+    expert: [
+      {
+        id: "dashboard",
+        title: "Dashboard",
+        icon: "dashboard",
+        path: "/dashboard",
+        description: "Overview and analytics",
+      },
+      {
+        id: "documents",
+        title: "Documents",
+        icon: "document",
+        description: "Document management",
+        children: [
+          {
+            id: "upload",
+            title: "Upload Document",
+            icon: "upload",
+            path: "/upload",
+          },
+          {
+            id: "analyze",
+            title: "Analyze Document",
+            icon: "search",
+            path: "/framework",
+          },
+        ],
+      },
+      {
+        id: "frameworks",
+        title: "Frameworks",
+        icon: "shield",
+        description: "Compliance frameworks",
+        children: [
+          {
+            id: "upload-framework",
+            title: "Upload Framework",
+            icon: "upload",
+            path: "/upload-framework",
+          },
+          {
+            id: "browse-frameworks",
+            title: "Browse Frameworks",
+            icon: "book",
+            path: "/framework",
+          },
+        ],
+      },
+      {
+        id: "reports",
+        title: "Reports",
+        icon: "chart",
+        path: "/reports",
+        description: "Compliance reports",
+      },
+    ],
+
+    user: [
+      {
+        id: "dashboard",
+        title: "Dashboard",
+        icon: "dashboard",
+        path: "/dashboard",
+        description: "Your compliance overview",
+      },
+      {
+        id: "documents",
+        title: "My Documents",
+        icon: "document",
+        path: "/documents",
+        description: "Uploaded documents",
+      },
+      {
+        id: "reports",
+        title: "My Reports",
+        icon: "chart",
+        path: "/my-reports",
+        description: "Personal reports",
+      },
+      {
+        id: "settings",
+        title: "Profile Settings",
+        icon: "settings",
+        path: "/settings",
+        description: "Update your profile",
+      },
+    ],
+  };
+
+  const role = user?.role || "expert";
+
+  const menuItems = navigationConfig[role];
 
   function handleMenuClick(item) {
     if (item.children) {
       setActiveMenu(activeMenu === item.id ? null : item.id);
     } else {
       if (item.path === "/reports" || item.path === "/settings") {
-        // Placeholder for reports and settings pages
         alert(`${item.title} page - Coming soon!`);
-        console.log("Navigate to:", item.title);
       } else {
-        navigate(item.path);
         setIsOpen(false);
       }
     }
   }
 
-  function handleSubMenuClick(subItem) {
-    navigate(subItem.path);
+  function handleSubMenuClick() {
     setIsOpen(false);
   }
 
@@ -159,20 +212,20 @@ function Navigation() {
           <div className="nav-menu">
             {menuItems.map((item) => (
               <div key={item.id} className="nav-item">
-                <div
-                  className={`nav-link ${isActive(item.path) ? "active" : ""} ${
-                    activeMenu === item.id ? "expanded" : ""
-                  }`}
-                  onClick={() => handleMenuClick(item)}
-                >
-                  <div className="nav-icon">
-                    <Icon name={item.icon} size="20px" />
-                  </div>
-                  <div className="nav-content">
-                    <div className="nav-title">{item.title}</div>
-                    <div className="nav-description">{item.description}</div>
-                  </div>
-                  {item.children && (
+                {item.children ? (
+                  <div
+                    className={`nav-link ${
+                      activeMenu === item.id ? "expanded" : ""
+                    }`}
+                    onClick={() => handleMenuClick(item)}
+                  >
+                    <div className="nav-icon">
+                      <Icon name={item.icon} size="20px" />
+                    </div>
+                    <div className="nav-content">
+                      <div className="nav-title">{item.title}</div>
+                      <div className="nav-description">{item.description}</div>
+                    </div>
                     <div className="nav-arrow">
                       <Icon
                         name={
@@ -181,24 +234,56 @@ function Navigation() {
                         size="12px"
                       />
                     </div>
-                  )}
-                </div>
+                  </div>
+                ) : item.path === "/reports" || item.path === "/settings" ? (
+                  <div
+                    className={`nav-link ${
+                      isActive(item.path) ? "active" : ""
+                    }`}
+                    onClick={() => handleMenuClick(item)}
+                  >
+                    <div className="nav-icon">
+                      <Icon name={item.icon} size="20px" />
+                    </div>
+                    <div className="nav-content">
+                      <div className="nav-title">{item.title}</div>
+                      <div className="nav-description">{item.description}</div>
+                    </div>
+                  </div>
+                ) : (
+                  <Link
+                    to={item.path}
+                    className={`nav-link ${
+                      isActive(item.path) ? "active" : ""
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <div className="nav-icon">
+                      <Icon name={item.icon} size="20px" />
+                    </div>
+                    <div className="nav-content">
+                      <div className="nav-title">{item.title}</div>
+                      <div className="nav-description">{item.description}</div>
+                    </div>
+                  </Link>
+                )}
 
                 {item.children && activeMenu === item.id && (
                   <div className="nav-submenu">
                     {item.children.map((subItem) => (
-                      <div
+                      <Link
                         key={subItem.id}
+                        to={subItem.path}
                         className={`nav-sublink ${
                           isActive(subItem.path) ? "active" : ""
                         }`}
-                        onClick={() => handleSubMenuClick(subItem)}
+                        onClick={handleSubMenuClick}
                       >
                         <div className="nav-subicon">
                           <Icon name={subItem.icon} size="16px" />
                         </div>
                         <div className="nav-subtitle">{subItem.title}</div>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 )}

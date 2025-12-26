@@ -75,6 +75,21 @@
     border: 1px solid var(--border-code, #21262d);
 }
 
+.back-btn {
+    background: transparent;
+    color: var(--primary, #007bff);
+    border: 1px solid var(--primary, #007bff);
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    background-color: var(--primary, #007bff);
+    color: #fff;
+}
+
 /* Light theme overrides */
 .light .error-boundary {
     background-color: var(--bg-primary-light, #ffffff);
