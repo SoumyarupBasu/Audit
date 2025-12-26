@@ -296,7 +296,11 @@ function Navigation() {
               <div className="user-avatar">
                 <Icon name="user" size="20px" />
               </div>
-              <div className="user-info">
+              <Link
+                to="/profile"
+                className="user-info"
+                onClick={() => setIsOpen(false)}
+              >
                 <div className="user-name">{user?.name || "Admin User"}</div>
                 <div className="user-role">
                   {role === "admin"
@@ -305,7 +309,7 @@ function Navigation() {
                     ? "System Expert"
                     : "System User"}
                 </div>
-              </div>
+              </Link>
               <div className="user-status">
                 <div className="status-indicator"></div>
               </div>

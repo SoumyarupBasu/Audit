@@ -17,6 +17,8 @@ import AIFrameworkExtractor from "../pages/frameworkManagement/AIFrameworkExtrac
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 import AllUsers from "../pages/userManagement/AllUsers";
+import Profile from "../pages/profileManagement/Profile";
+import EditProfile from "../pages/profileManagement/EditProfile";
 
 /**
  * Simple routing - auth routes use AuthLayout directly
@@ -162,6 +164,22 @@ export function AppRoutes() {
         element={
           <ProtectedRoute>
             <AIFrameworkExtractor />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile/update"
+        element={
+          <ProtectedRoute>
+            <EditProfile />
           </ProtectedRoute>
         }
       />

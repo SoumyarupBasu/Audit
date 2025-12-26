@@ -36,6 +36,10 @@ function LayoutWrapper({ children }) {
         title: "Dashboard",
         breadcrumbs: [{ label: "Dashboard", active: true }],
       },
+      "/profile": {
+        title: "Profile",
+        breadcrumbs: [{ label: "Profile", active: true }],
+      },
       "/users": {
         title: "All Users",
         breadcrumbs: [
