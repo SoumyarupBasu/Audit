@@ -10,84 +10,160 @@ function Navigation() {
   const [activeMenu, setActiveMenu] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
-  // Get current page from location
-  const currentPage = location.pathname.replace("/", "") || "dashboard";
+  const navigationConfig = {
+    admin: [
+      {
+        id: "dashboard",
+        title: "Dashboard",
+        icon: "dashboard",
+        path: "/dashboard",
+        description: "Admin overview & analytics",
+      },
+      {
+        id: "users",
+        title: "User Management",
+        icon: "user",
+        description: "Manage users & roles",
+        children: [
+          {
+            id: "all-users",
+            title: "All Users",
+            icon: "users",
+            path: "/users",
+          },
+          {
+            id: "experts",
+            title: "Experts",
+            icon: "shield",
+            path: "/experts",
+          },
+        ],
+      },
+      {
+        id: "frameworks",
+        title: "Frameworks",
+        icon: "book",
+        path: "/frameworks",
+        description: "Manage compliance frameworks",
+      },
+      {
+        id: "reports",
+        title: "Reports",
+        icon: "chart",
+        path: "/reports",
+        description: "System-wide reports",
+      },
+      {
+        id: "settings",
+        title: "Settings",
+        icon: "settings",
+        path: "/settings",
+        description: "Admin settings",
+      },
+    ],
 
-  const menuItems = [
-    {
-      id: "dashboard",
-      title: "Dashboard",
-      icon: "dashboard",
-      path: "/dashboard",
-      description: "Overview and analytics",
-    },
-    {
-      id: "documents",
-      title: "Documents",
-      icon: "document",
-      description: "Document management",
-      children: [
-        {
-          id: "upload",
-          title: "Upload Document",
-          icon: "upload",
-          path: "/upload",
-        },
-        {
-          id: "analyze",
-          title: "Analyze Document",
-          icon: "search",
-          path: "/framework",
-        },
-      ],
-    },
-    {
-      id: "frameworks",
-      title: "Frameworks",
-      icon: "shield",
-      description: "Compliance frameworks",
-      children: [
-        {
-          id: "upload-framework",
-          title: "Upload Framework",
-          icon: "upload",
-          path: "/upload-framework",
-        },
-        {
-          id: "browse-frameworks",
-          title: "Browse Frameworks",
-          icon: "book",
-          path: "/framework",
-        },
-      ],
-    },
-    {
-      id: "reports",
-      title: "Reports",
-      icon: "chart",
-      path: "/reports",
-      description: "Compliance reports",
-    },
-    {
-      id: "settings",
-      title: "Settings",
-      icon: "settings",
-      path: "/settings",
-      description: "Application settings",
-    },
-  ];
+    expert: [
+      {
+        id: "dashboard",
+        title: "Dashboard",
+        icon: "dashboard",
+        path: "/dashboard",
+        description: "Overview and analytics",
+      },
+      {
+        id: "documents",
+        title: "Documents",
+        icon: "document",
+        description: "Document management",
+        children: [
+          {
+            id: "upload",
+            title: "Upload Document",
+            icon: "upload",
+            path: "/upload",
+          },
+          {
+            id: "analyze",
+            title: "Analyze Document",
+            icon: "search",
+            path: "/framework",
+          },
+        ],
+      },
+      {
+        id: "frameworks",
+        title: "Frameworks",
+        icon: "shield",
+        description: "Compliance frameworks",
+        children: [
+          {
+            id: "upload-framework",
+            title: "Upload Framework",
+            icon: "upload",
+            path: "/upload-framework",
+          },
+          {
+            id: "browse-frameworks",
+            title: "Browse Frameworks",
+            icon: "book",
+            path: "/framework",
+          },
+        ],
+      },
+      {
+        id: "reports",
+        title: "Reports",
+        icon: "chart",
+        path: "/reports",
+        description: "Compliance reports",
+      },
+    ],
+
+    user: [
+      {
+        id: "dashboard",
+        title: "Dashboard",
+        icon: "dashboard",
+        path: "/dashboard",
+        description: "Your compliance overview",
+      },
+      {
+        id: "documents",
+        title: "My Documents",
+        icon: "document",
+        path: "/documents",
+        description: "Uploaded documents",
+      },
+      {
+        id: "reports",
+        title: "My Reports",
+        icon: "chart",
+        path: "/my-reports",
+        description: "Personal reports",
+      },
+      {
+        id: "settings",
+        title: "Profile Settings",
+        icon: "settings",
+        path: "/settings",
+        description: "Update your profile",
+      },
+    ],
+  };
+
+  const role = user?.role || "expert";
+
+  const menuItems = navigationConfig[role];
 
   function handleMenuClick(item) {
     if (item.children) {
       setActiveMenu(activeMenu === item.id ? null : item.id);
     } else {
       if (item.path === "/reports" || item.path === "/settings") {
-        // Placeholder for reports and settings pages
         alert(`${item.title} page - Coming soon!`);
-        console.log("Navigate to:", item.title);
       } else {
         navigate(item.path);
         setIsOpen(false);
