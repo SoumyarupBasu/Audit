@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useAuth } from "../context/AuthContext";
-import { forgotPassword as forgotPasswordAPI } from "../services/authService";
+import { useAuth } from "../../context/AuthContext";
+import { forgotPassword as forgotPasswordAPI } from "../../services/authService";
 
 export default function ForgotPassword() {
   const navigate = useNavigate();

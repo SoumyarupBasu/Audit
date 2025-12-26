@@ -1,5 +1,5 @@
 import { useAuth } from "../context/AuthContext";
-import CustomFrameworkBuilder from "../pages/CustomFrameworkBuilder";
+import CustomFrameworkBuilder from "../pages/frameworkManagement/CustomFrameworkBuilder";
 import "../styles/auth.css";
 import Header from "./Header";
 import Navigation from "./Navigation";
