@@ -59,7 +59,7 @@ export async function login(email, password) {
  * Register a new user
  * POST /api/auth/register
  */
-export async function register(name, email, phone, password) {
+export async function register({ name, email, phone, password }) {
   return apiRequest("/auth/register", {
     method: "POST",
     body: JSON.stringify({ name, email, phone, password }),

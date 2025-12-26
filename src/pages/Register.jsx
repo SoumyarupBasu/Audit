@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import { register as registerAPI } from "../services/authService";
-import Icon from "../components/Icon";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -14,30 +14,31 @@ export default function Register() {
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrorMessage("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setIsLoading(true);
-    setErrorMessage("");
 
     try {
-      await registerAPI(
-        formData.email,
-        formData.password,
-        formData.name,
-        formData.phone
-      );
+      const response = await registerAPI({
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+        phone: formData.phone,
+      });
       setEmailForVerification(formData.email);
+      toast.success(
+        response.message || "OTP sent to your email. Please check your inbox"
+      );
       navigate("/verify-otp");
     } catch (error) {
-      setErrorMessage(error.message || "Registration failed");
+      console.error(error.message || "Registration failed");
+      toast.error(error.message || "Registration failed");
     } finally {
       setIsLoading(false);
     }
@@ -50,14 +51,6 @@ export default function Register() {
         <h2 className="auth-form-title">Create Account</h2>
         <p className="auth-form-description">Join us to get started</p>
       </div>
-
-      {/* Error Message */}
-      {errorMessage && (
-        <div className="auth-message error">
-          <Icon name="warning" size="18px" />
-          <span>{errorMessage}</span>
-        </div>
-      )}
 
       {/* Form */}
       <form className="auth-form" onSubmit={handleSubmit}>

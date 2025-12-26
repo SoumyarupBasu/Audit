@@ -1,4 +1,5 @@
 import { BrowserRouter } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import ErrorBoundary from "./components/ErrorBoundary";
 import LayoutWrapper from "./layouts/LayoutWrapper";
 import { CustomFrameworkProvider } from "./context/CustomFrameworkContext";
@@ -26,6 +27,53 @@ function App() {
               <NavigationProvider>
                 <LayoutWrapper>
                   <AppRoutes />
+                  <Toaster
+                    position="top-center"
+                    gutter={10}
+                    toastOptions={{
+                      duration: 2000,
+                      style: {
+                        background: "var(--bg-2)",
+                        color: "var(--text)",
+                        border: "1px solid var(--line)",
+                        borderRadius: "var(--radius-lg)",
+                        boxShadow: "var(--shadow-md)",
+                        fontSize: "var(--font-size-sm)",
+                        fontFamily: "var(--font-family)",
+                      },
+
+                      success: {
+                        duration: 3000,
+                        iconTheme: {
+                          primary: "var(--success)",
+                          secondary: "var(--bg)",
+                        },
+                        style: {
+                          borderLeft: "4px solid var(--success)",
+                          background: "var(--bg-2)",
+                        },
+                      },
+
+                      error: {
+                        duration: 4000,
+                        iconTheme: {
+                          primary: "var(--error)",
+                          secondary: "var(--bg)",
+                        },
+                        style: {
+                          borderLeft: "4px solid var(--error)",
+                          background: "var(--bg-2)",
+                        },
+                      },
+
+                      loading: {
+                        iconTheme: {
+                          primary: "var(--primary)",
+                          secondary: "var(--bg)",
+                        },
+                      },
+                    }}
+                  />
                 </LayoutWrapper>
               </NavigationProvider>
             </CustomFrameworkProvider>
