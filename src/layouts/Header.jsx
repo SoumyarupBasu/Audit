@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import Icon from "./Icon";
+import Icon from "../components/Icon";
 
 function Header({ title, breadcrumbs = [], actions = [] }) {
   const navigate = useNavigate();

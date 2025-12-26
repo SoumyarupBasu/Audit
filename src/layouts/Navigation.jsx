@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
-import Icon from "./Icon";
+import Icon from "../components/Icon";
 import "../styles/navigation.css";
 
 function Navigation() {

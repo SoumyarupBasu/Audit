@@ -1,8 +1,8 @@
 import { useAuth } from "../context/AuthContext";
-import Navigation from "../components/Navigation";
-import Header from "../components/Header";
 import CustomFrameworkBuilder from "../pages/CustomFrameworkBuilder";
 import "../styles/auth.css";
+import Header from "./Header";
+import Navigation from "./Navigation";
 
 /**
  * Main Application Layout Component
