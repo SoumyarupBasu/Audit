@@ -43,8 +43,33 @@ function Header({ title, breadcrumbs = [], actions = [] }) {
 
   return (
     <header className="page-head">
-      <div className="container head-grid">
-        <div className="page-title">{title}</div>
+      <div className="head-grid">
+        <div className="title-container">
+          <span className="page-title">{title}</span>
+          {breadcrumbs.length > 0 && (
+            <div className="crumbs">
+              {breadcrumbs.map((crumb, index) => (
+                <span key={index}>
+                  {crumb.path ? (
+                    <span
+                      className="crumb-link"
+                      onClick={() => navigate(crumb.path)}
+                    >
+                      {crumb.label}
+                    </span>
+                  ) : (
+                    <span className={crumb.active ? "muted" : "crumb-link"}>
+                      {crumb.label}
+                    </span>
+                  )}
+                  {index < breadcrumbs.length - 1 && (
+                    <span className="sep">/</span>
+                  )}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
         <div className="page-actions">
           {allActions.map((action) => (
             <button
@@ -59,29 +84,6 @@ function Header({ title, breadcrumbs = [], actions = [] }) {
             </button>
           ))}
         </div>
-        {breadcrumbs.length > 0 && (
-          <div className="crumbs">
-            {breadcrumbs.map((crumb, index) => (
-              <span key={index}>
-                {crumb.path ? (
-                  <span
-                    className="crumb-link"
-                    onClick={() => navigate(crumb.path)}
-                  >
-                    {crumb.label}
-                  </span>
-                ) : (
-                  <span className={crumb.active ? "muted" : "crumb-link"}>
-                    {crumb.label}
-                  </span>
-                )}
-                {index < breadcrumbs.length - 1 && (
-                  <span className="sep">/</span>
-                )}
-              </span>
-            ))}
-          </div>
-        )}
       </div>
     </header>
   );
