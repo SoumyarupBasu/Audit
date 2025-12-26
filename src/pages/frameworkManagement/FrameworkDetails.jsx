@@ -6,30 +6,6 @@ import {
 } from "../../utils/frameworkSimilarity";
 import { frameworks as predefinedFrameworks } from "../frameworkManagement/FrameworkSelection";
 
-function Breadcrumbs({ frameworkName, onNavigate }) {
-  return (
-    <div className="crumbs">
-      <span className="crumb-link" onClick={() => onNavigate("dashboard")}>
-        Dashboard
-      </span>
-      <span className="sep">/</span>
-      <span className="crumb-link" onClick={() => onNavigate("documents")}>
-        Documents
-      </span>
-      <span className="sep">/</span>
-      <span className="crumb-link" onClick={() => onNavigate("upload")}>
-        Upload Document
-      </span>
-      <span className="sep">/</span>
-      <span className="crumb-link" onClick={() => onNavigate("framework")}>
-        Framework Selection
-      </span>
-      <span className="sep">/</span>
-      <span className="muted">{frameworkName}</span>
-    </div>
-  );
-}
-
 function Section({ title, right, children }) {
   return (
     <div className="section">
@@ -345,21 +321,6 @@ export default function FrameworkDetails({
   return (
     <div className="layout-single">
       <main className="content">
-        <header className="page-head">
-          <div className="container head-grid">
-            <div className="page-title">{selectedFramework.name} Details</div>
-            <div className="page-actions">
-              <button className="ghost" onClick={handleBackToSelection}>
-                ← BACK
-              </button>
-            </div>
-            <Breadcrumbs
-              frameworkName={selectedFramework.name}
-              onNavigate={onNavigate}
-            />
-          </div>
-        </header>
-
         <div className="container stack gap-lg">
           {/* Framework Header */}
           <Section title="Framework Information">

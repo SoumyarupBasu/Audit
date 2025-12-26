@@ -2,22 +2,6 @@ import React, { useState, useEffect } from "react";
 import Icon from "../../components/Icon";
 import "../../styles/comparisonResults.css";
 
-function Breadcrumbs({ onNavigate }) {
-  return (
-    <div className="crumbs">
-      <span className="crumb-link" onClick={() => onNavigate("dashboard")}>
-        Dashboard
-      </span>
-      <span className="sep">/</span>
-      <span className="crumb-link" onClick={() => onNavigate("upload")}>
-        Upload Document
-      </span>
-      <span className="sep">/</span>
-      <span className="muted">Comparison Results</span>
-    </div>
-  );
-}
-
 function ScoreBadge({ score }) {
   let className = "score-badge";
   if (score >= 90) className += " high";
@@ -172,22 +156,6 @@ export default function ComparisonResults({
 
   return (
     <div className="comparison-results-page">
-      <header className="results-header">
-        <div className="header-left">
-          <button className="back-btn" onClick={onBack}>
-            <Icon name="arrow-left" size="20px" />
-            Back
-          </button>
-          <div className="header-title">
-            <h1>Control Comparison Results</h1>
-            <p className="subtitle">
-              {results?.documentName} vs {results?.frameworkName}
-            </p>
-          </div>
-        </div>
-        <Breadcrumbs onNavigate={onNavigate} />
-      </header>
-
       {/* Summary Cards */}
       <div className="summary-cards">
         <div className="summary-card">

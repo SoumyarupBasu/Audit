@@ -1,19 +1,7 @@
-import React, { useRef, useState } from 'react'
-import Icon from '../components/Icon'
-import '../styles/upload.css'
-import '../styles/framework-upload.css'
-
-function Breadcrumbs({ onNavigate }) {
-  return (
-    <div className="crumbs">
-      <span className="crumb-link" onClick={() => onNavigate('dashboard')}>Dashboard</span>
-      <span className="sep">/</span>
-      <span className="crumb-link" onClick={() => onNavigate('frameworks')}>Frameworks</span>
-      <span className="sep">/</span>
-      <span className="muted">Upload Framework</span>
-    </div>
-  )
-}
+import React, { useRef, useState } from "react";
+import Icon from "../components/Icon";
+import "../styles/upload.css";
+import "../styles/framework-upload.css";
 
 function Section({ title, right, children }) {
   return (
@@ -24,122 +12,196 @@ function Section({ title, right, children }) {
       </div>
       <div className="section-body">{children}</div>
     </div>
-  )
+  );
 }
 
 export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
-  const inputFileRef = useRef(null)
-  const [file, setFile] = useState(null)
+  const inputFileRef = useRef(null);
+  const [file, setFile] = useState(null);
   const [form, setForm] = useState({
-    name: '',
-    fullName: '',
-    category: '',
-    description: '',
-    icon: '◆',
-    color: '#3b82f6',
-    features: '',
-    applicableIndustries: '',
-    complianceLevel: '',
-    regulatoryBody: '',
-    geographicScope: '',
-    lastUpdated: '',
-    version: '',
+    name: "",
+    fullName: "",
+    category: "",
+    description: "",
+    icon: "◆",
+    color: "#3b82f6",
+    features: "",
+    applicableIndustries: "",
+    complianceLevel: "",
+    regulatoryBody: "",
+    geographicScope: "",
+    lastUpdated: "",
+    version: "",
     certificationRequired: false,
     implementationComplexity: 5,
     maintenanceEffort: 5,
-    tags: '',
-    notes: ''
-  })
+    tags: "",
+    notes: "",
+  });
   const [sections, setSections] = useState([
-    { id: '', title: '', description: '', requirements: [{ id: '', title: '', description: '' }] }
-  ])
+    {
+      id: "",
+      title: "",
+      description: "",
+      requirements: [{ id: "", title: "", description: "" }],
+    },
+  ]);
 
   function openFilePicker() {
-    inputFileRef.current?.click()
+    inputFileRef.current?.click();
   }
 
   function onFileChange(e) {
-    const f = e.target.files?.[0]
-    if (f) setFile(f)
+    const f = e.target.files?.[0];
+    if (f) setFile(f);
   }
 
   function onDrop(e) {
-    e.preventDefault()
-    e.stopPropagation()
-    const f = e.dataTransfer.files?.[0]
-    if (f) setFile(f)
+    e.preventDefault();
+    e.stopPropagation();
+    const f = e.dataTransfer.files?.[0];
+    if (f) setFile(f);
   }
 
-  function onDragOver(e) { e.preventDefault() }
+  function onDragOver(e) {
+    e.preventDefault();
+  }
 
-  function update(key, value) { setForm(prev => ({ ...prev, [key]: value })) }
+  function update(key, value) {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }
 
   function addSection() {
-    setSections([...sections, { id: '', title: '', description: '', requirements: [{ id: '', title: '', description: '' }] }])
+    setSections([
+      ...sections,
+      {
+        id: "",
+        title: "",
+        description: "",
+        requirements: [{ id: "", title: "", description: "" }],
+      },
+    ]);
   }
 
   function removeSection(index) {
     if (sections.length > 1) {
-      setSections(sections.filter((_, i) => i !== index))
+      setSections(sections.filter((_, i) => i !== index));
     }
   }
 
   function updateSection(index, key, value) {
-    const newSections = [...sections]
-    newSections[index][key] = value
-    setSections(newSections)
+    const newSections = [...sections];
+    newSections[index][key] = value;
+    setSections(newSections);
   }
 
   function addRequirement(sectionIndex) {
-    const newSections = [...sections]
-    newSections[sectionIndex].requirements.push({ id: '', title: '', description: '' })
-    setSections(newSections)
+    const newSections = [...sections];
+    newSections[sectionIndex].requirements.push({
+      id: "",
+      title: "",
+      description: "",
+    });
+    setSections(newSections);
   }
 
   function removeRequirement(sectionIndex, reqIndex) {
-    const newSections = [...sections]
+    const newSections = [...sections];
     if (newSections[sectionIndex].requirements.length > 1) {
-      newSections[sectionIndex].requirements = newSections[sectionIndex].requirements.filter((_, i) => i !== reqIndex)
-      setSections(newSections)
+      newSections[sectionIndex].requirements = newSections[
+        sectionIndex
+      ].requirements.filter((_, i) => i !== reqIndex);
+      setSections(newSections);
     }
   }
 
   function updateRequirement(sectionIndex, reqIndex, key, value) {
-    const newSections = [...sections]
-    newSections[sectionIndex].requirements[reqIndex][key] = value
-    setSections(newSections)
+    const newSections = [...sections];
+    newSections[sectionIndex].requirements[reqIndex][key] = value;
+    setSections(newSections);
   }
 
   function handleCancel() {
-    setFile(null)
+    setFile(null);
     setForm({
-      name: '', fullName: '', category: '', description: '', icon: '◆', color: '#3b82f6',
-      features: '', applicableIndustries: '', complianceLevel: '', regulatoryBody: '',
-      geographicScope: '', lastUpdated: '', version: '', certificationRequired: false,
-      implementationComplexity: 5, maintenanceEffort: 5, tags: '', notes: ''
-    })
-    setSections([{ id: '', title: '', description: '', requirements: [{ id: '', title: '', description: '' }] }])
-    alert('Cancelled')
+      name: "",
+      fullName: "",
+      category: "",
+      description: "",
+      icon: "◆",
+      color: "#3b82f6",
+      features: "",
+      applicableIndustries: "",
+      complianceLevel: "",
+      regulatoryBody: "",
+      geographicScope: "",
+      lastUpdated: "",
+      version: "",
+      certificationRequired: false,
+      implementationComplexity: 5,
+      maintenanceEffort: 5,
+      tags: "",
+      notes: "",
+    });
+    setSections([
+      {
+        id: "",
+        title: "",
+        description: "",
+        requirements: [{ id: "", title: "", description: "" }],
+      },
+    ]);
+    alert("Cancelled");
   }
 
   function handleReset() {
-    setFile(null)
+    setFile(null);
     setForm({
-      name: '', fullName: '', category: '', description: '', icon: '◆', color: '#3b82f6',
-      features: '', applicableIndustries: '', complianceLevel: '', regulatoryBody: '',
-      geographicScope: '', lastUpdated: '', version: '', certificationRequired: false,
-      implementationComplexity: 5, maintenanceEffort: 5, tags: '', notes: ''
-    })
-    setSections([{ id: '', title: '', description: '', requirements: [{ id: '', title: '', description: '' }] }])
+      name: "",
+      fullName: "",
+      category: "",
+      description: "",
+      icon: "◆",
+      color: "#3b82f6",
+      features: "",
+      applicableIndustries: "",
+      complianceLevel: "",
+      regulatoryBody: "",
+      geographicScope: "",
+      lastUpdated: "",
+      version: "",
+      certificationRequired: false,
+      implementationComplexity: 5,
+      maintenanceEffort: 5,
+      tags: "",
+      notes: "",
+    });
+    setSections([
+      {
+        id: "",
+        title: "",
+        description: "",
+        requirements: [{ id: "", title: "", description: "" }],
+      },
+    ]);
   }
 
   function handleUpload() {
-    if (!form.name) { alert('Please enter a framework name.'); return }
-    if (!form.category) { alert('Please select a framework category.'); return }
-    
+    if (!form.name) {
+      alert("Please enter a framework name.");
+      return;
+    }
+    if (!form.category) {
+      alert("Please select a framework category.");
+      return;
+    }
+
     // Parse features from comma-separated string
-    const featuresArray = form.features.split(',').map(f => f.trim()).filter(f => f)
-    
+    const featuresArray = form.features
+      .split(",")
+      .map((f) => f.trim())
+      .filter((f) => f);
+
     const frameworkData = {
       id: `custom-${Date.now()}`,
       name: form.name,
@@ -149,7 +211,7 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
       color: form.color,
       features: featuresArray,
       category: form.category,
-      sections: sections.filter(s => s.id && s.title),
+      sections: sections.filter((s) => s.id && s.title),
       metadata: {
         applicableIndustries: form.applicableIndustries,
         complianceLevel: form.complianceLevel,
@@ -161,58 +223,35 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
         implementationComplexity: form.implementationComplexity,
         maintenanceEffort: form.maintenanceEffort,
         tags: form.tags,
-        notes: form.notes
+        notes: form.notes,
       },
       file: file,
       isCustom: true,
-      uploadedAt: new Date().toISOString()
-    }
-    
-    console.log('Uploading framework:', frameworkData)
-    
+      uploadedAt: new Date().toISOString(),
+    };
+
+    console.log("Uploading framework:", frameworkData);
+
     if (onFrameworkUpload) {
-      onFrameworkUpload(frameworkData)
+      onFrameworkUpload(frameworkData);
     } else {
-      alert('Framework upload simulated. Check console for data.')
+      alert("Framework upload simulated. Check console for data.");
     }
   }
 
-  function openAI() { alert('AI Assistant coming soon') }
-  function openSettings() { alert('Settings coming soon') }
-  function refreshPage() { window.location.reload() }
+  function openAI() {
+    alert("AI Assistant coming soon");
+  }
+  function openSettings() {
+    alert("Settings coming soon");
+  }
+  function refreshPage() {
+    window.location.reload();
+  }
 
   return (
     <div className="layout-single">
       <main className="content">
-        <header className="page-head framework-head">
-          <div className="container head-grid">
-            <div className="head-content">
-              <div className="page-icon">
-                <span style={{ fontSize: '28px', color: 'white' }}>◆</span>
-              </div>
-              <div>
-                <div className="page-title">Upload Custom Framework</div>
-                <div className="page-subtitle">Create and configure your own compliance framework</div>
-              </div>
-            </div>
-            <div className="page-actions">
-              <button className="ghost" onClick={openAI}>
-                <span className="btn-icon">
-                  <Icon name="lightbulb" size="18px" />
-                </span>
-                AI Assistant
-              </button>
-              <button className="ghost icon-only" onClick={openSettings}>
-                <Icon name="settings" size="18px" />
-              </button>
-              <button className="ghost icon-only" onClick={refreshPage}>
-                <Icon name="refresh" size="18px" />
-              </button>
-            </div>
-            <Breadcrumbs onNavigate={onNavigate} />
-          </div>
-        </header>
-
         <div className="container framework-container">
           {/* Progress Steps */}
           <div className="progress-steps">
@@ -240,21 +279,42 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
           <div className="framework-grid">
             {/* Left Column - Main Form */}
             <div className="framework-main">
-              <Section title={
-                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Icon name="document" size="18px" />
-                  Framework Documentation (Optional)
-                </span>
-              }>
+              <Section
+                title={
+                  <span
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <Icon name="document" size="18px" />
+                    Framework Documentation (Optional)
+                  </span>
+                }
+              >
                 <div className="upload-hint">
                   <span className="hint-icon">
                     <Icon name="info" size="18px" />
                   </span>
-                  <span>Upload supporting documentation to help define your framework structure</span>
+                  <span>
+                    Upload supporting documentation to help define your
+                    framework structure
+                  </span>
                 </div>
 
-                <div className={`dropzone-modern ${file ? 'has-file' : ''}`} onDrop={onDrop} onDragOver={onDragOver}>
-                  <input type="file" ref={inputFileRef} onChange={onFileChange} style={{ display: 'none' }} accept=".pdf,.doc,.docx" />
+                <div
+                  className={`dropzone-modern ${file ? "has-file" : ""}`}
+                  onDrop={onDrop}
+                  onDragOver={onDragOver}
+                >
+                  <input
+                    type="file"
+                    ref={inputFileRef}
+                    onChange={onFileChange}
+                    style={{ display: "none" }}
+                    accept=".pdf,.doc,.docx"
+                  />
 
                   {!file ? (
                     <>
@@ -263,7 +323,11 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                       </div>
                       <div className="drop-title">Drop your file here</div>
                       <div className="drop-subtitle">or click to browse</div>
-                      <button className="btn-upload" type="button" onClick={openFilePicker}>
+                      <button
+                        className="btn-upload"
+                        type="button"
+                        onClick={openFilePicker}
+                      >
                         <span className="btn-icon">
                           <span className="icon icon-upload"></span>
                         </span>
@@ -279,13 +343,24 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                   ) : (
                     <div className="file-preview">
                       <div className="file-icon">
-                        <span className="icon icon-file" style={{ fontSize: '48px' }}></span>
+                        <span
+                          className="icon icon-file"
+                          style={{ fontSize: "48px" }}
+                        ></span>
                       </div>
                       <div className="file-info">
                         <div className="file-name">{file.name}</div>
-                        <div className="file-size">{(file.size / 1024 / 1024).toFixed(2)} MB</div>
+                        <div className="file-size">
+                          {(file.size / 1024 / 1024).toFixed(2)} MB
+                        </div>
                       </div>
-                      <button className="btn-remove" onClick={(e) => { e.stopPropagation(); setFile(null); }}>
+                      <button
+                        className="btn-remove"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setFile(null);
+                        }}
+                      >
                         <span className="icon icon-close"></span>
                       </button>
                     </div>
@@ -293,12 +368,20 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                 </div>
               </Section>
 
-              <Section title={
-                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span className="icon icon-info"></span>
-                  Basic Information
-                </span>
-              }>
+              <Section
+                title={
+                  <span
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
+                  >
+                    <span className="icon icon-info"></span>
+                    Basic Information
+                  </span>
+                }
+              >
                 <div className="form-grid">
                   <div className="field-modern full-width">
                     <label className="label-modern">
@@ -308,7 +391,7 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                     <input
                       className="input-modern"
                       value={form.name}
-                      onChange={e => update('name', e.target.value)}
+                      onChange={(e) => update("name", e.target.value)}
                       placeholder="e.g., ISO 27001, NIST CSF, Custom Security Framework"
                     />
                   </div>
@@ -320,7 +403,7 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                     <input
                       className="input-modern"
                       value={form.fullName}
-                      onChange={e => update('fullName', e.target.value)}
+                      onChange={(e) => update("fullName", e.target.value)}
                       placeholder="Information Security Management System"
                     />
                   </div>
@@ -330,16 +413,32 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                       <span className="label-text">Category</span>
                       <span className="label-required">*</span>
                     </label>
-                    <select className="input-modern" value={form.category} onChange={e => update('category', e.target.value)}>
+                    <select
+                      className="input-modern"
+                      value={form.category}
+                      onChange={(e) => update("category", e.target.value)}
+                    >
                       <option value="">Select a category...</option>
-                      <option value="Information Security">Information Security</option>
-                      <option value="Cybersecurity Framework">Cybersecurity Framework</option>
-                      <option value="Security Controls">Security Controls</option>
-                      <option value="Financial Compliance">Financial Compliance</option>
+                      <option value="Information Security">
+                        Information Security
+                      </option>
+                      <option value="Cybersecurity Framework">
+                        Cybersecurity Framework
+                      </option>
+                      <option value="Security Controls">
+                        Security Controls
+                      </option>
+                      <option value="Financial Compliance">
+                        Financial Compliance
+                      </option>
                       <option value="Data Privacy">Data Privacy</option>
                       <option value="Payment Security">Payment Security</option>
-                      <option value="Healthcare Compliance">Healthcare Compliance</option>
-                      <option value="Industry Standard">Industry Standard</option>
+                      <option value="Healthcare Compliance">
+                        Healthcare Compliance
+                      </option>
+                      <option value="Industry Standard">
+                        Industry Standard
+                      </option>
                       <option value="Custom">Custom</option>
                     </select>
                   </div>
@@ -352,7 +451,7 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                       className="input-modern textarea-modern"
                       rows={4}
                       value={form.description}
-                      onChange={e => update('description', e.target.value)}
+                      onChange={(e) => update("description", e.target.value)}
                       placeholder="Provide a comprehensive description of the framework's purpose, scope, and key objectives..."
                     />
                   </div>
@@ -365,15 +464,27 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                       <input
                         className="input-modern icon-input"
                         value={form.icon}
-                        onChange={e => update('icon', e.target.value)}
+                        onChange={(e) => update("icon", e.target.value)}
                         placeholder="◆"
                       />
-                      <div className="icon-preview" style={{ background: form.color }}>
-                        <span style={{ fontSize: '24px', color: 'white' }}>{form.icon || '◆'}</span>
+                      <div
+                        className="icon-preview"
+                        style={{ background: form.color }}
+                      >
+                        <span style={{ fontSize: "24px", color: "white" }}>
+                          {form.icon || "◆"}
+                        </span>
                       </div>
                     </div>
-                    <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '4px' }}>
-                      Available: ◆ (shield), ▭ (document), ◫ (chart), ◉ (settings), ✓ (check), ▲ (warning), ◷ (clock)
+                    <div
+                      style={{
+                        fontSize: "11px",
+                        color: "var(--muted)",
+                        marginTop: "4px",
+                      }}
+                    >
+                      Available: ◆ (shield), ▭ (document), ◫ (chart), ◉
+                      (settings), ✓ (check), ▲ (warning), ◷ (clock)
                     </div>
                   </div>
 
@@ -386,7 +497,7 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                         className="input-modern color-input"
                         type="color"
                         value={form.color}
-                        onChange={e => update('color', e.target.value)}
+                        onChange={(e) => update("color", e.target.value)}
                       />
                       <span className="color-value">{form.color}</span>
                     </div>
@@ -399,7 +510,7 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                     <input
                       className="input-modern"
                       value={form.version}
-                      onChange={e => update('version', e.target.value)}
+                      onChange={(e) => update("version", e.target.value)}
                       placeholder="e.g., 2.0, 2023"
                     />
                   </div>
@@ -412,14 +523,19 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                     <input
                       className="input-modern"
                       value={form.features}
-                      onChange={e => update('features', e.target.value)}
+                      onChange={(e) => update("features", e.target.value)}
                       placeholder="Risk Management, Security Controls, Compliance Monitoring, Audit Support"
                     />
                     {form.features && (
                       <div className="feature-tags">
-                        {form.features.split(',').map((f, i) => f.trim() && (
-                          <span key={i} className="feature-tag">{f.trim()}</span>
-                        ))}
+                        {form.features.split(",").map(
+                          (f, i) =>
+                            f.trim() && (
+                              <span key={i} className="feature-tag">
+                                {f.trim()}
+                              </span>
+                            )
+                        )}
                       </div>
                     )}
                   </div>
@@ -435,7 +551,9 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                     <input
                       className="input-modern"
                       value={form.applicableIndustries}
-                      onChange={e => update('applicableIndustries', e.target.value)}
+                      onChange={(e) =>
+                        update("applicableIndustries", e.target.value)
+                      }
                       placeholder="Finance, Healthcare, Technology"
                     />
                   </div>
@@ -447,7 +565,7 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                     <input
                       className="input-modern"
                       value={form.regulatoryBody}
-                      onChange={e => update('regulatoryBody', e.target.value)}
+                      onChange={(e) => update("regulatoryBody", e.target.value)}
                       placeholder="ISO, NIST, PCI SSC"
                     />
                   </div>
@@ -456,7 +574,13 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                     <label className="label-modern">
                       <span className="label-text">Compliance Level</span>
                     </label>
-                    <select className="input-modern" value={form.complianceLevel} onChange={e => update('complianceLevel', e.target.value)}>
+                    <select
+                      className="input-modern"
+                      value={form.complianceLevel}
+                      onChange={(e) =>
+                        update("complianceLevel", e.target.value)
+                      }
+                    >
                       <option value="">Select level...</option>
                       <option value="Mandatory">🔴 Mandatory</option>
                       <option value="Recommended">🟡 Recommended</option>
@@ -471,7 +595,9 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                     <input
                       className="input-modern"
                       value={form.geographicScope}
-                      onChange={e => update('geographicScope', e.target.value)}
+                      onChange={(e) =>
+                        update("geographicScope", e.target.value)
+                      }
                       placeholder="Global, EU, US, APAC"
                     />
                   </div>
@@ -484,7 +610,7 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                       className="input-modern"
                       type="date"
                       value={form.lastUpdated}
-                      onChange={e => update('lastUpdated', e.target.value)}
+                      onChange={(e) => update("lastUpdated", e.target.value)}
                     />
                   </div>
 
@@ -496,15 +622,19 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                     <input
                       className="input-modern"
                       value={form.tags}
-                      onChange={e => update('tags', e.target.value)}
+                      onChange={(e) => update("tags", e.target.value)}
                       placeholder="security, compliance, audit, risk"
                     />
                   </div>
 
                   <div className="field-modern full-width">
                     <label className="label-modern">
-                      <span className="label-text">Implementation Complexity</span>
-                      <span className="label-value">Level {form.implementationComplexity}/10</span>
+                      <span className="label-text">
+                        Implementation Complexity
+                      </span>
+                      <span className="label-value">
+                        Level {form.implementationComplexity}/10
+                      </span>
                     </label>
                     <input
                       className="slider-modern"
@@ -512,7 +642,12 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                       min="1"
                       max="10"
                       value={form.implementationComplexity}
-                      onChange={e => update('implementationComplexity', parseFloat(e.target.value))}
+                      onChange={(e) =>
+                        update(
+                          "implementationComplexity",
+                          parseFloat(e.target.value)
+                        )
+                      }
                     />
                     <div className="slider-labels">
                       <span>Simple</span>
@@ -523,7 +658,9 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                   <div className="field-modern full-width">
                     <label className="label-modern">
                       <span className="label-text">Maintenance Effort</span>
-                      <span className="label-value">Level {form.maintenanceEffort}/10</span>
+                      <span className="label-value">
+                        Level {form.maintenanceEffort}/10
+                      </span>
                     </label>
                     <input
                       className="slider-modern"
@@ -531,7 +668,9 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                       min="1"
                       max="10"
                       value={form.maintenanceEffort}
-                      onChange={e => update('maintenanceEffort', parseFloat(e.target.value))}
+                      onChange={(e) =>
+                        update("maintenanceEffort", parseFloat(e.target.value))
+                      }
                     />
                     <div className="slider-labels">
                       <span>Low</span>
@@ -544,10 +683,14 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                       <input
                         type="checkbox"
                         checked={form.certificationRequired}
-                        onChange={e => update('certificationRequired', e.target.checked)}
+                        onChange={(e) =>
+                          update("certificationRequired", e.target.checked)
+                        }
                       />
                       <span className="checkbox-box"></span>
-                      <span className="checkbox-label">Certification Required</span>
+                      <span className="checkbox-label">
+                        Certification Required
+                      </span>
                     </label>
                   </div>
 
@@ -559,7 +702,7 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                       className="input-modern textarea-modern"
                       rows={3}
                       value={form.notes}
-                      onChange={e => update('notes', e.target.value)}
+                      onChange={(e) => update("notes", e.target.value)}
                       placeholder="Any additional information, special requirements, or implementation notes..."
                     />
                   </div>
@@ -576,21 +719,40 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                 </div>
                 <div className="sidebar-body">
                   <div className="preview-framework">
-                    <div className="preview-icon" style={{ background: form.color }}>
-                      <span style={{ fontSize: '32px', color: 'white' }}>{form.icon || '◆'}</span>
+                    <div
+                      className="preview-icon"
+                      style={{ background: form.color }}
+                    >
+                      <span style={{ fontSize: "32px", color: "white" }}>
+                        {form.icon || "◆"}
+                      </span>
                     </div>
-                    <div className="preview-name">{form.name || 'Framework Name'}</div>
-                    <div className="preview-category">{form.category || 'Category'}</div>
-                    {form.version && <div className="preview-version">v{form.version}</div>}
+                    <div className="preview-name">
+                      {form.name || "Framework Name"}
+                    </div>
+                    <div className="preview-category">
+                      {form.category || "Category"}
+                    </div>
+                    {form.version && (
+                      <div className="preview-version">v{form.version}</div>
+                    )}
                   </div>
 
                   {form.features && (
                     <div className="preview-section">
                       <div className="preview-label">Features</div>
                       <div className="preview-features">
-                        {form.features.split(',').slice(0, 3).map((f, i) => f.trim() && (
-                          <div key={i} className="preview-feature">✓ {f.trim()}</div>
-                        ))}
+                        {form.features
+                          .split(",")
+                          .slice(0, 3)
+                          .map(
+                            (f, i) =>
+                              f.trim() && (
+                                <div key={i} className="preview-feature">
+                                  ✓ {f.trim()}
+                                </div>
+                              )
+                          )}
                       </div>
                     </div>
                   )}
@@ -604,7 +766,10 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                       </div>
                       <div className="preview-stat">
                         <div className="stat-value">
-                          {sections.reduce((sum, s) => sum + s.requirements.length, 0)}
+                          {sections.reduce(
+                            (sum, s) => sum + s.requirements.length,
+                            0
+                          )}
                         </div>
                         <div className="stat-label">Requirements</div>
                       </div>
@@ -621,163 +786,305 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
                 <div className="sidebar-body">
                   <div className="tip-item">
                     <div className="tip-icon">✓</div>
-                    <div className="tip-text">Use clear, descriptive names for better organization</div>
+                    <div className="tip-text">
+                      Use clear, descriptive names for better organization
+                    </div>
                   </div>
                   <div className="tip-item">
                     <div className="tip-icon">✓</div>
-                    <div className="tip-text">Add detailed requirements for accurate compliance tracking</div>
+                    <div className="tip-text">
+                      Add detailed requirements for accurate compliance tracking
+                    </div>
                   </div>
                   <div className="tip-item">
                     <div className="tip-icon">✓</div>
-                    <div className="tip-text">Group related requirements into logical sections</div>
+                    <div className="tip-text">
+                      Group related requirements into logical sections
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-              <Section title={
-                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '18px' }}>▭</span>
+            <Section
+              title={
+                <span
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
+                  <span style={{ fontSize: "18px" }}>▭</span>
                   Framework Sections & Requirements (Optional)
                 </span>
-              }>
-            <div className="hint">Define the sections and requirements of your framework. Each section can have multiple requirements.</div>
-
-            {sections.map((section, sectionIndex) => (
-              <div key={sectionIndex} style={{ background: 'var(--bg-2)', border: '1px solid var(--line)', borderRadius: '12px', padding: '16px', marginTop: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                  <h4 style={{ margin: 0, fontSize: '16px', fontWeight: 600 }}>Section {sectionIndex + 1}</h4>
-                  {sections.length > 1 && (
-                    <button className="ghost" type="button" onClick={() => removeSection(sectionIndex)} style={{ padding: '6px 12px', fontSize: '12px' }}>
-                      Remove Section
-                    </button>
-                  )}
-                </div>
-
-                <div className="grid3" style={{ marginBottom: '12px' }}>
-                  <div className="field">
-                    <label>Section ID</label>
-                    <input
-                      className="input"
-                      value={section.id}
-                      onChange={e => updateSection(sectionIndex, 'id', e.target.value)}
-                      placeholder="e.g., A.5, Section 1"
-                    />
-                  </div>
-                  <div className="field" style={{ gridColumn: 'span 2' }}>
-                    <label>Section Title</label>
-                    <input
-                      className="input"
-                      value={section.title}
-                      onChange={e => updateSection(sectionIndex, 'title', e.target.value)}
-                      placeholder="e.g., Information Security Policies"
-                    />
-                  </div>
-                </div>
-
-                <div className="field" style={{ marginBottom: '16px' }}>
-                  <label>Section Description</label>
-                  <textarea
-                    className="input"
-                    rows={2}
-                    value={section.description}
-                    onChange={e => updateSection(sectionIndex, 'description', e.target.value)}
-                    placeholder="Brief description of this section"
-                  />
-                </div>
-
-                <div style={{ borderTop: '1px dashed var(--line)', paddingTop: '12px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                    <h5 style={{ margin: 0, fontSize: '14px', fontWeight: 600, color: 'var(--muted)' }}>Requirements</h5>
-                    <button className="btn" type="button" onClick={() => addRequirement(sectionIndex)} style={{ padding: '6px 12px', fontSize: '12px' }}>
-                      + Add Requirement
-                    </button>
-                  </div>
-
-                  {section.requirements.map((requirement, reqIndex) => (
-                    <div key={reqIndex} style={{ background: 'var(--bg-3)', border: '1px solid var(--line)', borderRadius: '8px', padding: '12px', marginBottom: '8px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--muted)' }}>Requirement {reqIndex + 1}</span>
-                        {section.requirements.length > 1 && (
-                          <button
-                            className="ghost"
-                            type="button"
-                            onClick={() => removeRequirement(sectionIndex, reqIndex)}
-                            style={{ padding: '4px 8px', fontSize: '11px' }}
-                          >
-                            Remove
-                          </button>
-                        )}
-                      </div>
-
-                      <div className="grid3" style={{ marginBottom: '8px' }}>
-                        <div className="field">
-                          <label style={{ fontSize: '12px' }}>Requirement ID</label>
-                          <input
-                            className="input"
-                            value={requirement.id}
-                            onChange={e => updateRequirement(sectionIndex, reqIndex, 'id', e.target.value)}
-                            placeholder="e.g., A.5.1"
-                            style={{ fontSize: '13px', padding: '8px 10px' }}
-                          />
-                        </div>
-                        <div className="field" style={{ gridColumn: 'span 2' }}>
-                          <label style={{ fontSize: '12px' }}>Requirement Title</label>
-                          <input
-                            className="input"
-                            value={requirement.title}
-                            onChange={e => updateRequirement(sectionIndex, reqIndex, 'title', e.target.value)}
-                            placeholder="e.g., Management direction for information security"
-                            style={{ fontSize: '13px', padding: '8px 10px' }}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="field">
-                        <label style={{ fontSize: '12px' }}>Requirement Description</label>
-                        <textarea
-                          className="input"
-                          rows={2}
-                          value={requirement.description}
-                          onChange={e => updateRequirement(sectionIndex, reqIndex, 'description', e.target.value)}
-                          placeholder="Detailed description of this requirement"
-                          style={{ fontSize: '13px', padding: '8px 10px' }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              }
+            >
+              <div className="hint">
+                Define the sections and requirements of your framework. Each
+                section can have multiple requirements.
               </div>
-            ))}
 
-                <div style={{ marginTop: '16px' }}>
-                  <button className="btn" type="button" onClick={addSection}>
-                    + Add Section
-                  </button>
-                </div>
-              </Section>
+              {sections.map((section, sectionIndex) => (
+                <div
+                  key={sectionIndex}
+                  style={{
+                    background: "var(--bg-2)",
+                    border: "1px solid var(--line)",
+                    borderRadius: "12px",
+                    padding: "16px",
+                    marginTop: "16px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: "12px",
+                    }}
+                  >
+                    <h4
+                      style={{ margin: 0, fontSize: "16px", fontWeight: 600 }}
+                    >
+                      Section {sectionIndex + 1}
+                    </h4>
+                    {sections.length > 1 && (
+                      <button
+                        className="ghost"
+                        type="button"
+                        onClick={() => removeSection(sectionIndex)}
+                        style={{ padding: "6px 12px", fontSize: "12px" }}
+                      >
+                        Remove Section
+                      </button>
+                    )}
+                  </div>
 
-              {/* Action Buttons */}
-              <div className="framework-actions">
-                <div className="actions-left">
-                  <button className="btn-secondary" type="button" onClick={handleReset}>
-                    <span className="btn-icon">↻</span>
-                    Reset Form
-                  </button>
+                  <div className="grid3" style={{ marginBottom: "12px" }}>
+                    <div className="field">
+                      <label>Section ID</label>
+                      <input
+                        className="input"
+                        value={section.id}
+                        onChange={(e) =>
+                          updateSection(sectionIndex, "id", e.target.value)
+                        }
+                        placeholder="e.g., A.5, Section 1"
+                      />
+                    </div>
+                    <div className="field" style={{ gridColumn: "span 2" }}>
+                      <label>Section Title</label>
+                      <input
+                        className="input"
+                        value={section.title}
+                        onChange={(e) =>
+                          updateSection(sectionIndex, "title", e.target.value)
+                        }
+                        placeholder="e.g., Information Security Policies"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="field" style={{ marginBottom: "16px" }}>
+                    <label>Section Description</label>
+                    <textarea
+                      className="input"
+                      rows={2}
+                      value={section.description}
+                      onChange={(e) =>
+                        updateSection(
+                          sectionIndex,
+                          "description",
+                          e.target.value
+                        )
+                      }
+                      placeholder="Brief description of this section"
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      borderTop: "1px dashed var(--line)",
+                      paddingTop: "12px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: "12px",
+                      }}
+                    >
+                      <h5
+                        style={{
+                          margin: 0,
+                          fontSize: "14px",
+                          fontWeight: 600,
+                          color: "var(--muted)",
+                        }}
+                      >
+                        Requirements
+                      </h5>
+                      <button
+                        className="btn"
+                        type="button"
+                        onClick={() => addRequirement(sectionIndex)}
+                        style={{ padding: "6px 12px", fontSize: "12px" }}
+                      >
+                        + Add Requirement
+                      </button>
+                    </div>
+
+                    {section.requirements.map((requirement, reqIndex) => (
+                      <div
+                        key={reqIndex}
+                        style={{
+                          background: "var(--bg-3)",
+                          border: "1px solid var(--line)",
+                          borderRadius: "8px",
+                          padding: "12px",
+                          marginBottom: "8px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginBottom: "8px",
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontSize: "13px",
+                              fontWeight: 600,
+                              color: "var(--muted)",
+                            }}
+                          >
+                            Requirement {reqIndex + 1}
+                          </span>
+                          {section.requirements.length > 1 && (
+                            <button
+                              className="ghost"
+                              type="button"
+                              onClick={() =>
+                                removeRequirement(sectionIndex, reqIndex)
+                              }
+                              style={{ padding: "4px 8px", fontSize: "11px" }}
+                            >
+                              Remove
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="grid3" style={{ marginBottom: "8px" }}>
+                          <div className="field">
+                            <label style={{ fontSize: "12px" }}>
+                              Requirement ID
+                            </label>
+                            <input
+                              className="input"
+                              value={requirement.id}
+                              onChange={(e) =>
+                                updateRequirement(
+                                  sectionIndex,
+                                  reqIndex,
+                                  "id",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="e.g., A.5.1"
+                              style={{ fontSize: "13px", padding: "8px 10px" }}
+                            />
+                          </div>
+                          <div
+                            className="field"
+                            style={{ gridColumn: "span 2" }}
+                          >
+                            <label style={{ fontSize: "12px" }}>
+                              Requirement Title
+                            </label>
+                            <input
+                              className="input"
+                              value={requirement.title}
+                              onChange={(e) =>
+                                updateRequirement(
+                                  sectionIndex,
+                                  reqIndex,
+                                  "title",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="e.g., Management direction for information security"
+                              style={{ fontSize: "13px", padding: "8px 10px" }}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="field">
+                          <label style={{ fontSize: "12px" }}>
+                            Requirement Description
+                          </label>
+                          <textarea
+                            className="input"
+                            rows={2}
+                            value={requirement.description}
+                            onChange={(e) =>
+                              updateRequirement(
+                                sectionIndex,
+                                reqIndex,
+                                "description",
+                                e.target.value
+                              )
+                            }
+                            placeholder="Detailed description of this requirement"
+                            style={{ fontSize: "13px", padding: "8px 10px" }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="actions-right">
-                  <button className="btn-cancel" type="button" onClick={handleCancel}>
-                    Cancel
-                  </button>
-                  <button className="btn-primary-large" type="button" onClick={handleUpload}>
-                    <span className="btn-icon">▲</span>
-                    Upload Framework
-                  </button>
-                </div>
+              ))}
+
+              <div style={{ marginTop: "16px" }}>
+                <button className="btn" type="button" onClick={addSection}>
+                  + Add Section
+                </button>
+              </div>
+            </Section>
+
+            {/* Action Buttons */}
+            <div className="framework-actions">
+              <div className="actions-left">
+                <button
+                  className="btn-secondary"
+                  type="button"
+                  onClick={handleReset}
+                >
+                  <span className="btn-icon">↻</span>
+                  Reset Form
+                </button>
+              </div>
+              <div className="actions-right">
+                <button
+                  className="btn-cancel"
+                  type="button"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="btn-primary-large"
+                  type="button"
+                  onClick={handleUpload}
+                >
+                  <span className="btn-icon">▲</span>
+                  Upload Framework
+                </button>
               </div>
             </div>
+          </div>
         </div>
       </main>
     </div>
-  )
+  );
 }

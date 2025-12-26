@@ -19,25 +19,6 @@ function Section({ title, children, right }) {
   );
 }
 
-function Breadcrumbs({ onNavigate }) {
-  return (
-    <div className="crumbs">
-      <span className="crumb-link" onClick={() => onNavigate("dashboard")}>
-        Dashboard
-      </span>
-      <span className="sep">/</span>
-      <span
-        className="crumb-link"
-        onClick={() => onNavigate("upload-framework")}
-      >
-        Upload Framework
-      </span>
-      <span className="sep">/</span>
-      <span>Framework Comparison</span>
-    </div>
-  );
-}
-
 export default function FrameworkComparison({
   uploadedFramework,
   onDocumentUpload,
@@ -144,24 +125,6 @@ export default function FrameworkComparison({
   return (
     <div className="layout-single">
       <main className="content">
-        <header className="page-head">
-          <div className="container head-grid">
-            <div className="page-title">Framework Comparison</div>
-            <div className="page-actions">
-              <button className="ghost" onClick={openAI}>
-                AI ASSISTANT
-              </button>
-              <button className="ghost" onClick={openSettings}>
-                ⚙
-              </button>
-              <button className="ghost" onClick={refreshPage}>
-                ↻
-              </button>
-            </div>
-            <Breadcrumbs onNavigate={onNavigate} />
-          </div>
-        </header>
-
         <div className="container stack gap-lg">
           {/* Uploaded Framework Header */}
           <Section title="Your Custom Framework">
