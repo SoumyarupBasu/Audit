@@ -297,8 +297,14 @@ function Navigation() {
                 <Icon name="user" size="20px" />
               </div>
               <div className="user-info">
-                <div className="user-name">Admin User</div>
-                <div className="user-role">System Administrator</div>
+                <div className="user-name">{user?.name || "Admin User"}</div>
+                <div className="user-role">
+                  {role === "admin"
+                    ? "System Administrator"
+                    : role === "expert"
+                    ? "System Expert"
+                    : "System User"}
+                </div>
               </div>
               <div className="user-status">
                 <div className="status-indicator"></div>
