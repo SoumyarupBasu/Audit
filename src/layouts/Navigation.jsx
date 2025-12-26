@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
-import Icon from "./Icon";
+import Icon from "../components/Icon";
 import "../styles/navigation.css";
 
 function Navigation() {
@@ -297,8 +297,14 @@ function Navigation() {
                 <Icon name="user" size="20px" />
               </div>
               <div className="user-info">
-                <div className="user-name">Admin User</div>
-                <div className="user-role">System Administrator</div>
+                <div className="user-name">{user?.name || "Admin User"}</div>
+                <div className="user-role">
+                  {role === "admin"
+                    ? "System Administrator"
+                    : role === "expert"
+                    ? "System Expert"
+                    : "System User"}
+                </div>
               </div>
               <div className="user-status">
                 <div className="status-indicator"></div>

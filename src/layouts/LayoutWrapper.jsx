@@ -18,7 +18,7 @@ function LayoutWrapper({ children }) {
     "/verify-otp",
     "/forgot-password",
     "/reset-password",
-    "/resend-otp",
+    "/verify-email",
   ];
 
   // For auth pages when not authenticated, just render children

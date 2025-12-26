@@ -1,12 +1,12 @@
 import { useLocation } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import Icon from "../components/Icon";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
-import VerifyOTP from "../pages/VerifyOTP";
-import ForgotPassword from "../pages/ForgotPassword";
-import ResetPassword from "../pages/ResetPassword";
-import ResendOTP from "../pages/ResendOTP";
+import Login from "../pages/auth/Login";
+import Register from "../pages/auth/Register";
+import VerifyOTP from "../pages/auth/VerifyOTP";
+import ForgotPassword from "../pages/auth/ForgotPassword";
+import ResetPassword from "../pages/auth/ResetPassword";
+import VerifyEmail from "../pages/auth/VerifyEmail";
 import "../styles/auth.css";
 
 /**
@@ -30,8 +30,8 @@ export default function AuthLayout() {
         return <ForgotPassword />;
       case "/reset-password":
         return <ResetPassword />;
-      case "/resend-otp":
-        return <ResendOTP />;
+      case "/verify-email":
+        return <VerifyEmail />;
       default:
         return <Login />;
     }
