@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import {
   resetPassword as resetPasswordAPI,
   resendOTP as resendOTPAPI,
 } from "../services/authService";
-import Icon from "../components/Icon";
 
 export default function ResetPassword() {
   const navigate = useNavigate();
@@ -15,8 +15,7 @@ export default function ResetPassword() {
     confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [isResendOtpLoading, setIsResendOtpLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const { getEmailForVerification, clearPendingEmail } = useAuth();
 
@@ -42,22 +41,20 @@ export default function ResetPassword() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrorMessage("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (formData.newPassword !== formData.confirmPassword) {
-      setErrorMessage("Passwords do not match");
+      toast.error("New Password and Confirm Password do not match");
       return;
     }
 
     setIsLoading(true);
-    setErrorMessage("");
 
     try {
-      await resetPasswordAPI({
+      const response = await resetPasswordAPI({
         email,
         otp: formData.otp,
         password: formData.newPassword,
@@ -66,14 +63,19 @@ export default function ResetPassword() {
       // Clear pending email
       clearPendingEmail();
 
-      setSuccessMessage("Password reset successful! Redirecting to login...");
+      toast.success(
+        response.message || "Password reset successful! Redirecting to login..."
+      );
 
       // Navigate to login
       setTimeout(() => {
         navigate("/login");
-      }, 2000);
+      }, 500);
     } catch (error) {
-      setErrorMessage(
+      console.error(
+        error.message || "Failed to reset password. Please try again."
+      );
+      toast.error(
         error.message || "Failed to reset password. Please try again."
       );
     } finally {
@@ -84,15 +86,19 @@ export default function ResetPassword() {
   // Handle resend OTP
   const handleResendOTP = async () => {
     if (resendCooldown > 0) return;
+    setIsResendOtpLoading(true);
 
     try {
-      await resendOTPAPI(email);
-      setSuccessMessage("A new OTP has been sent to your email.");
+      const response = await resendOTPAPI(email);
+      toast.success(
+        response.message || "A new OTP has been sent to your email."
+      );
       setResendCooldown(60);
     } catch (error) {
-      setErrorMessage(
-        error.message || "Failed to resend OTP. Please try again."
-      );
+      console.error(error.message || "Failed to resend OTP. Please try again.");
+      toast.error(error.message || "Failed to resend OTP. Please try again.");
+    } finally {
+      setIsResendOtpLoading(false);
     }
   };
 
@@ -105,22 +111,6 @@ export default function ResetPassword() {
           Enter the OTP sent to your email and create a new password
         </p>
       </div>
-
-      {/* Success Message */}
-      {successMessage && (
-        <div className="auth-message success">
-          <Icon name="check-circle" size="18px" />
-          <span>{successMessage}</span>
-        </div>
-      )}
-
-      {/* Error Message */}
-      {errorMessage && (
-        <div className="auth-message error">
-          <Icon name="warning" size="18px" />
-          <span>{errorMessage}</span>
-        </div>
-      )}
 
       {/* Form */}
       <form className="auth-form" onSubmit={handleSubmit}>
@@ -198,26 +188,27 @@ export default function ResetPassword() {
                   Resend in {resendCooldown}s
                 </span>
               ) : (
-                <a
+                <Link
                   className="auth-link"
                   onClick={handleResendOTP}
                   role="button"
                 >
-                  Resend OTP
-                </a>
+                  {isResendOtpLoading ? "Resending..." : "Resend OTP"}
+                </Link>
               )}
             </span>
           </div>
-          <a
-            className="auth-link"
-            onClick={() => {
-              clearPendingEmail();
-              navigate("/login");
-            }}
-            role="button"
-          >
+          <Link to={"/login"} className="auth-link" role="button">
             Back to Login
-          </a>
+          </Link>
+          <Link
+            to={"/forgot-password"}
+            className="auth-link"
+            role="button"
+            style={{ marginLeft: "2rem" }}
+          >
+            Back to Forgot Password
+          </Link>
         </div>
       </form>
     </>

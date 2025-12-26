@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import {
   verifyOTP as verifyOTPAPI,
@@ -11,8 +12,7 @@ export default function VerifyOTP() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", otp: "" });
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [isResendOtpLoading, setIsResendOtpLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const { getEmailForVerification, clearPendingEmail, login } = useAuth();
 
@@ -40,13 +40,11 @@ export default function VerifyOTP() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrorMessage("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setErrorMessage("");
 
     try {
       const response = await verifyOTPAPI(formData.email, formData.otp);
@@ -59,14 +57,15 @@ export default function VerifyOTP() {
         login(response.user, response.token);
       }
 
-      setSuccessMessage("Email verified successfully!");
+      toast.success(response.message || "Email verified successfully!");
 
       // Navigate to dashboard or login
       setTimeout(() => {
         navigate(response.user ? "/dashboard" : "/login");
       }, 1500);
     } catch (error) {
-      setErrorMessage(error.message || "Invalid OTP. Please try again.");
+      console.error(error.message || "Invalid OTP. Please try again.");
+      toast.error(error.message || "Invalid OTP. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -76,14 +75,19 @@ export default function VerifyOTP() {
   const handleResendOTP = async () => {
     if (resendCooldown > 0) return;
 
+    setIsResendOtpLoading(true);
+
     try {
-      await resendOTPAPI(email);
-      setSuccessMessage("A new OTP has been sent to your email.");
+      const response = await resendOTPAPI(email);
+      toast.success(
+        response.message || "A new OTP has been sent to your email."
+      );
       setResendCooldown(60); // 60 second cooldown
     } catch (error) {
-      setErrorMessage(
-        error.message || "Failed to resend OTP. Please try again."
-      );
+      console.error(error.message || "Failed to resend OTP. Please try again.");
+      toast.error(error.message || "Failed to resend OTP. Please try again.");
+    } finally {
+      setIsResendOtpLoading(false);
     }
   };
 
@@ -96,22 +100,6 @@ export default function VerifyOTP() {
           Enter the verification code sent to your email
         </p>
       </div>
-
-      {/* Success Message */}
-      {successMessage && (
-        <div className="auth-message success">
-          <Icon name="check-circle" size="18px" />
-          <span>{successMessage}</span>
-        </div>
-      )}
-
-      {/* Error Message */}
-      {errorMessage && (
-        <div className="auth-message error">
-          <Icon name="warning" size="18px" />
-          <span>{errorMessage}</span>
-        </div>
-      )}
 
       {/* Form */}
       <form className="auth-form" onSubmit={handleSubmit}>
@@ -155,7 +143,7 @@ export default function VerifyOTP() {
           className={`auth-button ${isLoading ? "loading" : ""}`}
           disabled={isLoading}
         >
-          {isLoading ? "Verifying..." : "VERIFY"}
+          {isLoading ? "Verifying..." : "VERIFY OTP"}
         </button>
 
         <div className="auth-footer">
@@ -174,26 +162,27 @@ export default function VerifyOTP() {
                   Resend in {resendCooldown}s
                 </span>
               ) : (
-                <a
+                <Link
                   className="auth-link"
                   onClick={handleResendOTP}
                   role="button"
                 >
-                  Resend OTP
-                </a>
+                  {isResendOtpLoading ? "Resending" : "Resend OTP"}
+                </Link>
               )}
             </span>
           </div>
-          <a
-            className="auth-link"
-            onClick={() => {
-              clearPendingEmail();
-              navigate("/login");
-            }}
-            role="button"
-          >
+          <Link to={"/login"} className="auth-link" role="button">
             Back to Login
-          </a>
+          </Link>
+          <Link
+            to={"/register"}
+            className="auth-link"
+            role="button"
+            style={{ marginLeft: "2rem" }}
+          >
+            Back to Register
+          </Link>
         </div>
       </form>
     </>
