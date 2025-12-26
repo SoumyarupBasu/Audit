@@ -47,12 +47,6 @@ function LayoutWrapper({ children }) {
           background: "linear-gradient(135deg, #8b5cf6, #6366f1)",
         },
       },
-      {
-        id: "back",
-        label: "← BACK",
-        onClick: () => window.history.back(),
-        className: "ghost",
-      },
     ],
   };
 

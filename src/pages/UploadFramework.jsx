@@ -239,16 +239,6 @@ export default function UploadFramework({ onFrameworkUpload, onNavigate }) {
     }
   }
 
-  function openAI() {
-    alert("AI Assistant coming soon");
-  }
-  function openSettings() {
-    alert("Settings coming soon");
-  }
-  function refreshPage() {
-    window.location.reload();
-  }
-
   return (
     <div className="layout-single">
       <main className="content">

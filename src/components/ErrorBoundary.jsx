@@ -21,6 +21,13 @@ class ErrorBoundary extends React.Component {
     });
   }
 
+  handleGoBack = () => {
+    window.history.back();
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+  };
+
   render() {
     if (this.state.hasError) {
       // Fallback UI
@@ -29,17 +36,14 @@ class ErrorBoundary extends React.Component {
           <div className="error-container">
             <h2>Something went wrong</h2>
             <p>We're sorry, but something unexpected happened.</p>
-            <div className="">
+            <div className="flex items-center justify-center gap-10">
               <button
                 onClick={() => window.location.reload()}
                 className="error-reload-btn"
               >
                 Reload Page
               </button>
-              <button
-                onClick={() => window.history.back()}
-                className="back-btn"
-              >
+              <button onClick={this.handleGoBack} className=" ghost">
                 Go Back
               </button>
             </div>
