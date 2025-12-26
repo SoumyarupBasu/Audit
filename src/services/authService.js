@@ -110,6 +110,17 @@ export async function resendOTP(email) {
   });
 }
 
+/**
+ * Resend OTP to verify email
+ * POST /api/auth/verify-email
+ */
+export async function verifyEmail(email) {
+  return apiRequest("/auth/verify-email", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+}
+
 // Export all functions as default object
 export default {
   login,
@@ -118,4 +129,5 @@ export default {
   forgotPassword,
   resetPassword,
   resendOTP,
+  verifyEmail,
 };

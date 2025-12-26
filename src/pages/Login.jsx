@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import { login as loginAPI } from "../services/authService";
-import Icon from "../components/Icon";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -85,6 +84,14 @@ export default function Login() {
         <div className="auth-footer">
           <Link className="auth-link" to={"/forgot-password"} role="button">
             Forgot password?
+          </Link>
+          <Link
+            className="auth-link"
+            style={{ marginLeft: "1rem" }}
+            to={"/verify-email"}
+            role="button"
+          >
+            Verify Email?
           </Link>
           <div
             style={{

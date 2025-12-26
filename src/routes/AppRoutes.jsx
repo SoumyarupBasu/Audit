@@ -75,6 +75,14 @@ export function AppRoutes() {
           </PublicRoute>
         }
       />
+      <Route
+        path="/verify-email"
+        element={
+          <PublicRoute>
+            <AuthLayout />
+          </PublicRoute>
+        }
+      />
 
       {/* Protected Routes */}
       <Route

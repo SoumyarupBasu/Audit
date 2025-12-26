@@ -6,8 +6,8 @@ import Register from "../pages/Register";
 import VerifyOTP from "../pages/VerifyOTP";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
-import ResendOTP from "../pages/ResendOTP";
 import "../styles/auth.css";
+import VerifyEmail from "../pages/VerifyEmail";
 
 /**
  * Simple Authentication Layout Component
@@ -30,8 +30,8 @@ export default function AuthLayout() {
         return <ForgotPassword />;
       case "/reset-password":
         return <ResetPassword />;
-      case "/resend-otp":
-        return <ResendOTP />;
+      case "/verify-email":
+        return <VerifyEmail />;
       default:
         return <Login />;
     }
