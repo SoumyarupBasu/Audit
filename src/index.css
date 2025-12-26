@@ -9,6 +9,7 @@ a {
   text-decoration: inherit;
   transition: color 0.2s ease;
 }
+
 a:hover {
   color: var(--primary-light);
 }
@@ -25,12 +26,26 @@ button {
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 button:hover {
   border-color: var(--primary);
   background-color: var(--primary-2);
 }
+
 button:focus,
 button:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
+}
+
+.toaster>div {
+  backdrop-filter: blur(6px);
+}
+
+.react-hot-toast {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.react-hot-toast:hover {
+  transform: translateY(-2px);
 }

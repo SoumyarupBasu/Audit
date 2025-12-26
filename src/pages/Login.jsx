@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import { login as loginAPI } from "../services/authService";
 import Icon from "../components/Icon";
@@ -9,24 +10,23 @@ export default function Login() {
   const { login } = useAuth();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrorMessage(""); // Clear error on input change
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setErrorMessage("");
 
     try {
       const response = await loginAPI(formData.email, formData.password);
       login(response.user, response.token);
+      toast.success(response.message || "Login successfull");
       navigate("/dashboard");
     } catch (error) {
-      setErrorMessage(error.message || "Invalid email or password");
+      console.error(error.message || "Invalid email or password");
+      toast.error(error.message || "Invalid email or password");
     } finally {
       setIsLoading(false);
     }
@@ -41,14 +41,6 @@ export default function Login() {
           Sign in to your account to continue
         </p>
       </div>
-
-      {/* Error Message */}
-      {errorMessage && (
-        <div className="auth-message error">
-          <Icon name="warning" size="18px" />
-          <span>{errorMessage}</span>
-        </div>
-      )}
 
       {/* Form */}
       <form className="auth-form" onSubmit={handleSubmit}>
@@ -91,13 +83,9 @@ export default function Login() {
         </button>
 
         <div className="auth-footer">
-          <a
-            className="auth-link"
-            onClick={() => navigate("/forgot-password")}
-            role="button"
-          >
+          <Link className="auth-link" to={"/forgot-password"} role="button">
             Forgot password?
-          </a>
+          </Link>
           <div
             style={{
               marginTop: "var(--spacing-lg)",
@@ -105,13 +93,9 @@ export default function Login() {
             }}
           >
             Don't have an account?{" "}
-            <a
-              className="auth-link"
-              onClick={() => navigate("/register")}
-              role="button"
-            >
+            <Link className="auth-link" to={"/register"} role="button">
               Register here
-            </a>
+            </Link>
           </div>
         </div>
       </form>
