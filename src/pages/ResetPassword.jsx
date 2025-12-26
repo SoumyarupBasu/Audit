@@ -57,12 +57,11 @@ export default function ResetPassword() {
     setErrorMessage("");
 
     try {
-      await resetPasswordAPI(
+      await resetPasswordAPI({
         email,
-        formData.otp,
-        formData.newPassword,
-        formData.confirmPassword
-      );
+        otp: formData.otp,
+        password: formData.newPassword,
+      });
 
       // Clear pending email
       clearPendingEmail();
@@ -128,9 +127,6 @@ export default function ResetPassword() {
         <div className="form-group">
           <label className="form-label">Verification Code</label>
           <div className="input-wrapper">
-            <div className="input-icon">
-              <Icon name="key" size="20px" />
-            </div>
             <input
               type="text"
               name="otp"
@@ -148,9 +144,6 @@ export default function ResetPassword() {
         <div className="form-group">
           <label className="form-label">New Password</label>
           <div className="input-wrapper">
-            <div className="input-icon">
-              <Icon name="lock" size="20px" />
-            </div>
             <input
               type="password"
               name="newPassword"
@@ -169,9 +162,6 @@ export default function ResetPassword() {
         <div className="form-group">
           <label className="form-label">Confirm Password</label>
           <div className="input-wrapper">
-            <div className="input-icon">
-              <Icon name="lock" size="20px" />
-            </div>
             <input
               type="password"
               name="confirmPassword"

@@ -96,9 +96,7 @@ export default function AuthLayout() {
 
       {/* Right Side - Form Section */}
       <div className="auth-form-section">
-        <div className="auth-form-container">
-          {renderAuthForm()}
-        </div>
+        <div className="auth-form-container">{renderAuthForm()}</div>
       </div>
     </div>
   );

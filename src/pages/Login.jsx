@@ -55,9 +55,6 @@ export default function Login() {
         <div className="form-group">
           <label className="form-label">Email Address</label>
           <div className="input-wrapper">
-            <div className="input-icon">
-              <Icon name="mail" size="20px" />
-            </div>
             <input
               type="email"
               name="email"
@@ -73,9 +70,6 @@ export default function Login() {
         <div className="form-group">
           <label className="form-label">Password</label>
           <div className="input-wrapper">
-            <div className="input-icon">
-              <Icon name="lock" size="20px" />
-            </div>
             <input
               type="password"
               name="password"

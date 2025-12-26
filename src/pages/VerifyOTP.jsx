@@ -118,9 +118,6 @@ export default function VerifyOTP() {
         <div className="form-group">
           <label className="form-label">Email Address</label>
           <div className="input-wrapper">
-            <div className="input-icon">
-              <Icon name="mail" size="20px" />
-            </div>
             <input
               type="email"
               name="email"
@@ -137,9 +134,6 @@ export default function VerifyOTP() {
         <div className="form-group">
           <label className="form-label">Verification Code</label>
           <div className="input-wrapper">
-            <div className="input-icon">
-              <Icon name="key" size="20px" />
-            </div>
             <input
               type="text"
               name="otp"

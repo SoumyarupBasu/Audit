@@ -8,12 +8,10 @@ export default function Register() {
   const navigate = useNavigate();
   const { setEmailForVerification } = useAuth();
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
     phone: "",
     password: "",
-    confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -26,11 +24,6 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      setErrorMessage("Passwords do not match");
-      return;
-    }
-
     setIsLoading(true);
     setErrorMessage("");
 
@@ -38,8 +31,7 @@ export default function Register() {
       await registerAPI(
         formData.email,
         formData.password,
-        formData.firstName,
-        formData.lastName,
+        formData.name,
         formData.phone
       );
       setEmailForVerification(formData.email);
@@ -52,7 +44,7 @@ export default function Register() {
   };
 
   return (
-    <>
+    <div>
       {/* Form Header */}
       <div className="auth-form-header">
         <h2 className="auth-form-title">Create Account</h2>
@@ -70,26 +62,13 @@ export default function Register() {
       {/* Form */}
       <form className="auth-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label className="form-label">First Name</label>
+          <label className="form-label">Name</label>
           <input
             type="text"
-            name="firstName"
+            name="name"
             className="form-input"
-            placeholder="Enter your first name"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Last Name</label>
-          <input
-            type="text"
-            name="lastName"
-            className="form-input"
-            placeholder="Enter your last name"
-            value={formData.lastName}
+            placeholder="Enter your name"
+            value={formData.name}
             onChange={handleChange}
             required
           />
@@ -98,9 +77,6 @@ export default function Register() {
         <div className="form-group">
           <label className="form-label">Email Address</label>
           <div className="input-wrapper">
-            <div className="input-icon">
-              <Icon name="mail" size="20px" />
-            </div>
             <input
               type="email"
               name="email"
@@ -129,33 +105,12 @@ export default function Register() {
         <div className="form-group">
           <label className="form-label">Password</label>
           <div className="input-wrapper">
-            <div className="input-icon">
-              <Icon name="lock" size="20px" />
-            </div>
             <input
               type="password"
               name="password"
               className="form-input"
               placeholder="Create a password"
               value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Confirm Password</label>
-          <div className="input-wrapper">
-            <div className="input-icon">
-              <Icon name="lock" size="20px" />
-            </div>
-            <input
-              type="password"
-              name="confirmPassword"
-              className="form-input"
-              placeholder="Confirm your password"
-              value={formData.confirmPassword}
               onChange={handleChange}
               required
             />
@@ -183,6 +138,6 @@ export default function Register() {
           </div>
         </div>
       </form>
-    </>
+    </div>
   );
 }

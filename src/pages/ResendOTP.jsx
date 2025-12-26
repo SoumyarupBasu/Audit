@@ -99,9 +99,6 @@ export default function ResendOTP() {
         <div className="form-group">
           <label className="form-label">Email Address</label>
           <div className="input-wrapper">
-            <div className="input-icon">
-              <Icon name="mail" size="20px" />
-            </div>
             <input
               type="email"
               name="email"

@@ -92,10 +92,10 @@ export async function forgotPassword(email) {
  * Reset password with OTP
  * POST /api/auth/reset-password
  */
-export async function resetPassword(email, otp, newPassword, confirmPassword) {
+export async function resetPassword({ email, otp, password }) {
   return apiRequest("/auth/reset-password", {
     method: "POST",
-    body: JSON.stringify({ email, otp, newPassword, confirmPassword }),
+    body: JSON.stringify({ email, otp, password }),
   });
 }
 
