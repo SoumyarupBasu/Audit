@@ -6,17 +6,19 @@ import AuthLayout from "../layouts/AuthLayout";
 import Dashboard from "../pages/Dashboard";
 import UploadDocument from "../pages/UploadDocument";
 import UploadFramework from "../pages/UploadFramework";
-import FrameworkSelection from "../pages/FrameworkSelection";
-import FrameworkDetails from "../pages/FrameworkDetails";
-import FrameworkComparison from "../pages/FrameworkComparison";
-import FrameworkControls from "../pages/FrameworkControls";
-import ComparisonResults from "../pages/ComparisonResults";
-import AIFrameworkExtractor from "../pages/AIFrameworkExtractor";
+import FrameworkSelection from "../pages/frameworkManagement/FrameworkSelection";
+import FrameworkDetails from "../pages/frameworkManagement/FrameworkDetails";
+import FrameworkComparison from "../pages/frameworkManagement/FrameworkComparison";
+import FrameworkControls from "../pages/frameworkManagement/FrameworkControls";
+import ComparisonResults from "../pages/frameworkManagement/ComparisonResults";
+import AIFrameworkExtractor from "../pages/frameworkManagement/AIFrameworkExtractor";
 
 // Import route protection components
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
-import AllUsers from "../pages/AllUsers";
+import AllUsers from "../pages/userManagement/AllUsers";
+import Profile from "../pages/profileManagement/Profile";
+import EditProfile from "../pages/profileManagement/EditProfile";
 
 /**
  * Simple routing - auth routes use AuthLayout directly
@@ -69,6 +71,14 @@ export function AppRoutes() {
       />
       <Route
         path="/resend-otp"
+        element={
+          <PublicRoute>
+            <AuthLayout />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/verify-email"
         element={
           <PublicRoute>
             <AuthLayout />
@@ -154,6 +164,22 @@ export function AppRoutes() {
         element={
           <ProtectedRoute>
             <AIFrameworkExtractor />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile/update"
+        element={
+          <ProtectedRoute>
+            <EditProfile />
           </ProtectedRoute>
         }
       />

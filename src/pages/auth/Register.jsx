@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useAuth } from "../context/AuthContext";
-import { register as registerAPI } from "../services/authService";
+import { useAuth } from "../../context/AuthContext";
+import { register as registerAPI } from "../../services/authService";
 
 export default function Register() {
   const navigate = useNavigate();

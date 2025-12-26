@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Icon from "../components/Icon";
-import "../styles/framework.css";
+import Icon from "../../components/Icon";
+import "../../styles/framework.css";
 
 const API_BASE = "http://localhost:3001";
 

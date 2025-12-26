@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import AppLayout from "./AppLayout";
+import { generateBreadcrumbs } from "../utils/generateBreadcrumbs";
 
 /**
  * Layout Wrapper Component
@@ -11,6 +12,9 @@ function LayoutWrapper({ children }) {
   const location = useLocation();
   const { isAuthenticated } = useAuth();
 
+  const breadcrumbs = generateBreadcrumbs(location.pathname);
+  const pageTitle = breadcrumbs[breadcrumbs.length - 1]?.label || "";
+
   // Define which routes should NOT use AppLayout (auth pages handle their own layout)
   const authRoutes = [
     "/login",
@@ -18,7 +22,7 @@ function LayoutWrapper({ children }) {
     "/verify-otp",
     "/forgot-password",
     "/reset-password",
-    "/resend-otp",
+    "/verify-email",
   ];
 
   // For auth pages when not authenticated, just render children
@@ -29,112 +33,31 @@ function LayoutWrapper({ children }) {
     return <>{children}</>;
   }
 
-  // Page configuration for header
-  const getPageConfig = () => {
-    const routeConfigs = {
-      "/dashboard": {
-        title: "Dashboard",
-        breadcrumbs: [{ label: "Dashboard", active: true }],
+  const headerActionsMap = {
+    "/framework": [
+      {
+        id: "ai-extract",
+        label: "🤖 AI Extract Framework",
+        onClick: () => (window.location.href = "/ai-extractor"),
+        className: "primary",
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          background: "linear-gradient(135deg, #8b5cf6, #6366f1)",
+        },
       },
-      "/users": {
-        title: "All Users",
-        breadcrumbs: [
-          { label: "Dashboard", path: "/dashboard" },
-          { label: "All Users", active: true },
-        ],
-      },
-      "/upload": {
-        title: "Upload Document",
-        breadcrumbs: [
-          { label: "Dashboard", path: "/dashboard" },
-          { label: "Documents", path: "/dashboard" },
-          { label: "Upload Document", active: true },
-        ],
-      },
-      "/upload-framework": {
-        title: "Upload Framework",
-        breadcrumbs: [
-          { label: "Dashboard", path: "/dashboard" },
-          { label: "Frameworks", path: "/dashboard" },
-          { label: "Upload Framework", active: true },
-        ],
-      },
-      "/framework": {
-        title: "Select Framework",
-        breadcrumbs: [
-          { label: "Dashboard", path: "/dashboard" },
-          { label: "Documents", path: "/dashboard" },
-          { label: "Framework Selection", active: true },
-        ],
-        actions: [
-          {
-            id: "ai-extract",
-            label: "🤖 AI Extract Framework",
-            onClick: () => (window.location.href = "/ai-extractor"),
-            className: "primary",
-            style: {
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              background: "linear-gradient(135deg, #8b5cf6, #6366f1)",
-            },
-          },
-          {
-            id: "back",
-            label: "← BACK",
-            onClick: () => window.history.back(),
-            className: "ghost",
-          },
-        ],
-      },
-      "/framework-comparison": {
-        title: "Framework Comparison",
-        breadcrumbs: [
-          { label: "Dashboard", path: "/dashboard" },
-          { label: "Framework Comparison", active: true },
-        ],
-      },
-      "/framework-controls": {
-        title: "Framework Controls",
-        breadcrumbs: [
-          { label: "Dashboard", path: "/dashboard" },
-          { label: "Framework Controls", active: true },
-        ],
-      },
-      "/comparison-results": {
-        title: "Comparison Results",
-        breadcrumbs: [
-          { label: "Dashboard", path: "/dashboard" },
-          { label: "Comparison Results", active: true },
-        ],
-      },
-      "/details": {
-        title: "Framework Details",
-        breadcrumbs: [
-          { label: "Dashboard", path: "/dashboard" },
-          { label: "Framework Details", active: true },
-        ],
-      },
-      "/ai-extractor": {
-        title: "AI Framework Extractor",
-        breadcrumbs: [
-          { label: "Dashboard", path: "/dashboard" },
-          { label: "AI Framework Extractor", active: true },
-        ],
-      },
-    };
-
-    return routeConfigs[location.pathname] || { title: "", breadcrumbs: [] };
+    ],
   };
 
-  const pageConfig = getPageConfig();
+  const headerActions = headerActionsMap[location.pathname] || [];
 
   // Use main app layout for all other cases
   return (
     <AppLayout
-      pageTitle={pageConfig.title}
-      breadcrumbs={pageConfig.breadcrumbs}
-      headerActions={pageConfig.actions || []}
+      pageTitle={pageTitle}
+      breadcrumbs={breadcrumbs}
+      headerActions={headerActions}
     >
       {children}
     </AppLayout>

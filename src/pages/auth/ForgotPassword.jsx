@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useAuth } from "../context/AuthContext";
-import { login as loginAPI } from "../services/authService";
-import Icon from "../components/Icon";
+import { useAuth } from "../../context/AuthContext";
+import { forgotPassword as forgotPasswordAPI } from "../../services/authService";
 
-export default function Login() {
+export default function ForgotPassword() {
   const navigate = useNavigate();
-  const { login } = useAuth();
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ email: "" });
   const [isLoading, setIsLoading] = useState(false);
+  const { setEmailForVerification } = useAuth();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,13 +19,22 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const response = await loginAPI(formData.email, formData.password);
-      login(response.user, response.token);
-      toast.success(response.message || "Login successfull");
-      navigate("/dashboard");
+      const response = await forgotPasswordAPI(formData.email);
+
+      // Store email for reset password flow
+      setEmailForVerification(formData.email);
+
+      toast.success(
+        response.message || "OTP sent to your email. Please check your inbox"
+      );
+
+      // Navigate to reset password page
+      setTimeout(() => {
+        navigate("/reset-password");
+      }, 1500);
     } catch (error) {
-      console.error(error.message || "Invalid email or password");
-      toast.error(error.message || "Invalid email or password");
+      console.error(error.message || "Failed to send OTP. Please try again.");
+      toast.error(error.message || "Failed to send OTP. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -36,9 +44,10 @@ export default function Login() {
     <>
       {/* Form Header */}
       <div className="auth-form-header">
-        <h2 className="auth-form-title">Welcome Back</h2>
+        <h2 className="auth-form-title">Forgot Password?</h2>
         <p className="auth-form-description">
-          Sign in to your account to continue
+          Enter your email address and we'll send you an OTP to reset your
+          password
         </p>
       </div>
 
@@ -59,42 +68,24 @@ export default function Login() {
           </div>
         </div>
 
-        <div className="form-group">
-          <label className="form-label">Password</label>
-          <div className="input-wrapper">
-            <input
-              type="password"
-              name="password"
-              className="form-input"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        </div>
-
         <button
           type="submit"
           className={`auth-button ${isLoading ? "loading" : ""}`}
           disabled={isLoading}
         >
-          {isLoading ? "Signing in..." : "LOGIN"}
+          {isLoading ? "Sending OTP..." : "SEND OTP"}
         </button>
 
         <div className="auth-footer">
-          <Link className="auth-link" to={"/forgot-password"} role="button">
-            Forgot password?
-          </Link>
           <div
             style={{
-              marginTop: "var(--spacing-lg)",
               fontSize: "var(--font-size-sm)",
+              color: "var(--text-secondary)",
             }}
           >
-            Don't have an account?{" "}
-            <Link className="auth-link" to={"/register"} role="button">
-              Register here
+            Remember your password?{" "}
+            <Link to={"/login"} className="auth-link" role="button">
+              Login here
             </Link>
           </div>
         </div>
