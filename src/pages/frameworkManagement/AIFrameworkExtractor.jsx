@@ -5,22 +5,6 @@ import "../../styles/framework-upload.css";
 
 const API_BASE = "http://localhost:3001";
 
-function Breadcrumbs({ onNavigate }) {
-  return (
-    <div className="crumbs">
-      <span className="crumb-link" onClick={() => onNavigate("dashboard")}>
-        Dashboard
-      </span>
-      <span className="sep">/</span>
-      <span className="crumb-link" onClick={() => onNavigate("framework")}>
-        Frameworks
-      </span>
-      <span className="sep">/</span>
-      <span className="muted">AI Framework Extractor</span>
-    </div>
-  );
-}
-
 export default function AIFrameworkExtractor({
   onNavigate,
   onFrameworkCreated,
@@ -156,28 +140,6 @@ export default function AIFrameworkExtractor({
   return (
     <div className="layout-single">
       <main className="content">
-        <header className="page-head framework-head">
-          <div className="container head-grid">
-            <div className="head-content">
-              <div
-                className="page-icon"
-                style={{
-                  background: "linear-gradient(135deg, #8b5cf6, #6366f1)",
-                }}
-              >
-                <span style={{ fontSize: "28px", color: "white" }}>🤖</span>
-              </div>
-              <div>
-                <div className="page-title">AI Framework Extractor</div>
-                <div className="page-subtitle">
-                  Extract compliance controls from documents using AI
-                </div>
-              </div>
-            </div>
-            <Breadcrumbs onNavigate={onNavigate} />
-          </div>
-        </header>
-
         <div className="container framework-container">
           <div
             className="framework-grid"

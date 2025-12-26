@@ -7,22 +7,6 @@ import DeleteConfirmDialog from "../../components/DeleteConfirmDialog";
 import "../../styles/frameworkControls.css";
 import "../../styles/customFramework.css";
 
-function Breadcrumbs({ onNavigate, frameworkName }) {
-  return (
-    <div className="crumbs">
-      <span className="crumb-link" onClick={() => onNavigate("dashboard")}>
-        Dashboard
-      </span>
-      <span className="sep">/</span>
-      <span className="crumb-link" onClick={() => onNavigate("framework")}>
-        Browse Frameworks
-      </span>
-      <span className="sep">/</span>
-      <span className="muted">{frameworkName} Controls</span>
-    </div>
-  );
-}
-
 export default function FrameworkControls({ framework, onBack, onNavigate }) {
   const [controls, setControls] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -272,36 +256,6 @@ export default function FrameworkControls({ framework, onBack, onNavigate }) {
   return (
     <div className="layout-single">
       <main className="content">
-        <header className="page-head">
-          <div className="container head-grid">
-            <div className="page-title">
-              <Icon
-                name="shield"
-                size="28px"
-                style={{ marginRight: "12px", color: framework.color }}
-              />
-              {framework.name} Controls
-            </div>
-            <div className="page-actions">
-              <button
-                className="btn-add-control"
-                onClick={() => setShowAddModal(true)}
-              >
-                <Icon name="plus" size="16px" />
-                Add New Control
-              </button>
-              <button className="ghost" onClick={onBack}>
-                <Icon name="arrow-left" size="16px" />
-                BACK
-              </button>
-            </div>
-            <Breadcrumbs
-              onNavigate={onNavigate}
-              frameworkName={framework.name}
-            />
-          </div>
-        </header>
-
         <div className="container controls-container">
           {/* Framework Info Card */}
           <div className="framework-info-card">
