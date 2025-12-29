@@ -94,15 +94,20 @@ function AllUsers() {
   // Handle search
   const handleSearch = (term) => {
     const params = new URLSearchParams(searchParams);
-    if (term) {
-      params.set("search", term);
+    if (term && term.trim()) {
+      params.set("search", term.trim());
     } else {
       params.delete("search");
     }
-    params.set("page", "1");
+    params.set("page", "1"); // Reset to first page on search
     setSearchParams(params);
     setSearchTerm(term);
     setPagination((prev) => ({ ...prev, currentPage: 1 }));
+  };
+
+  // Clear search
+  const handleClearSearch = () => {
+    handleSearch("");
   };
 
   // Modal handlers
@@ -244,6 +249,11 @@ function AllUsers() {
           <h1 className="page-title">User Management</h1>
           <p className="page-subtitle">
             Manage system users and their permissions
+            {searchTerm && (
+              <span className="search-status">
+                {" • "}Showing results for "{searchTerm}"
+              </span>
+            )}
           </p>
         </div>
         <button className="btn-primary create-btn" onClick={openCreateModal}>
@@ -261,10 +271,16 @@ function AllUsers() {
           onPageChange: handlePageChange,
         }}
         onSearch={handleSearch}
-        searchPlaceholder="Search users by name or email..."
-        emptyMessage="No users found"
+        searchPlaceholder="Search users by name, email, or phone..."
+        emptyMessage={
+          searchTerm
+            ? `No users found matching "${searchTerm}"`
+            : "No users found"
+        }
         renderActions={renderActions}
         onRefresh={fetchUsers}
+        searchTerm={searchTerm}
+        onClearSearch={handleClearSearch}
       />
 
       {/* User Modal (View/Create/Edit) */}

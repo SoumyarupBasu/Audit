@@ -2,7 +2,6 @@
 
 .users-page {
   padding: var(--spacing-lg);
-  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -31,6 +30,11 @@
   font-size: var(--font-size-base);
   color: var(--text-secondary);
   margin: 0;
+}
+
+.search-status {
+  color: var(--primary);
+  font-weight: var(--font-weight-medium);
 }
 
 /* Create Button */
@@ -164,4 +168,3 @@
     font-size: var(--font-size-xl);
   }
 }
-
