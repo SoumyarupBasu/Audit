@@ -1,5 +1,5 @@
 /* User Modal Specific Styles */
-@import './gradientModalHeader.css';
+@import '../../../../styles/gradientModalHeader.css';
 
 .user-modal {
   max-width: 550px;

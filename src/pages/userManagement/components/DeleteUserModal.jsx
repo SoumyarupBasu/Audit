@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Icon from "../../../components/Icon";
 import "../../../styles/editControlModal.css";
-import "../../../styles/userModal.css";
+import "./styles/userModal.css";
 
 /**
  * DeleteUserModal Component - Confirmation dialog for deleting a user
