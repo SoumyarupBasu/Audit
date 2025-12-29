@@ -8,8 +8,8 @@ import Icon from "../../components/Icon";
 import {
   getAllUsers,
   createUser,
-  updateUser,
   deleteUser,
+  updateUserByAdmin,
 } from "../../services/userService";
 import "../../styles/allUsers.css";
 import { formatDate } from "../../utils/dateFormatter";
@@ -146,7 +146,7 @@ function AllUsers() {
         fetchUsers();
         return response;
       } else {
-        const response = await updateUser(
+        const response = await updateUserByAdmin(
           modalState.user._id || modalState.user.id,
           userData
         );

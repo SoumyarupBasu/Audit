@@ -10,7 +10,7 @@ const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api`;
  * Token is stored directly as 'authToken' by AuthContext
  */
 function getAuthToken() {
-  return localStorage.getItem('authToken');
+  return localStorage.getItem("authToken");
 }
 
 /**
@@ -22,11 +22,11 @@ async function apiRequest(endpoint, options = {}) {
 
   const config = {
     headers: {
-      'Content-Type': 'application/json',
-      ...(token && { 'Authorization': `Bearer ${token}` }),
-      ...options.headers
+      "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...options.headers,
     },
-    ...options
+    ...options,
   };
 
   try {
@@ -36,8 +36,8 @@ async function apiRequest(endpoint, options = {}) {
     if (!response.ok) {
       throw {
         status: response.status,
-        message: data.message || data.error || 'Something went wrong',
-        data
+        message: data.message || data.error || "Something went wrong",
+        data,
       };
     }
 
@@ -48,8 +48,8 @@ async function apiRequest(endpoint, options = {}) {
     }
     throw {
       status: 500,
-      message: error.message || 'Network error. Please check your connection.',
-      data: null
+      message: error.message || "Network error. Please check your connection.",
+      data: null,
     };
   }
 }
@@ -58,13 +58,13 @@ async function apiRequest(endpoint, options = {}) {
  * Get all users with pagination and search
  * GET /api/users?page=1&limit=10&search=query
  */
-export async function getAllUsers({ page = 1, limit = 10, search = '' } = {}) {
+export async function getAllUsers({ page = 1, limit = 10, search = "" } = {}) {
   const params = new URLSearchParams({
     page: page.toString(),
     limit: limit.toString(),
-    ...(search && { search })
+    ...(search && { search }),
   });
-  
+
   return apiRequest(`/user/all-users?${params.toString()}`);
 }
 
@@ -81,14 +81,29 @@ export async function getUserById(userId) {
  * POST /api/user/create
  */
 export async function createUser(userData) {
-  return apiRequest('/user/create', {
-    method: 'POST',
+  return apiRequest("/user/create", {
+    method: "POST",
     body: JSON.stringify({
       name: userData.name,
       email: userData.email,
       role: userData.role,
-      phone: userData.phone
-    })
+      phone: userData.phone,
+    }),
+  });
+}
+
+/**
+ * Update a user
+ * PUT /api/user/update/:id
+ */
+export async function updateUserByAdmin(userId, userData) {
+  return apiRequest(`/user/update/${userId}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      name: userData.name,
+      phone: userData.phone,
+      role: userData.role,
+    }),
   });
 }
 
@@ -96,14 +111,14 @@ export async function createUser(userData) {
  * Update user profile
  * PUT /api/user/profile/update
  */
-export async function updateUser(userId, userData) {
-  return apiRequest('/user/profile/update', {
-    method: 'PUT',
+export async function updateUser(userData) {
+  return apiRequest("/user/profile/update", {
+    method: "PUT",
     body: JSON.stringify({
       name: userData.name,
       email: userData.email,
-      phone: userData.phone
-    })
+      phone: userData.phone,
+    }),
   });
 }
 
@@ -113,7 +128,7 @@ export async function updateUser(userId, userData) {
  */
 export async function deleteUser(userId) {
   return apiRequest(`/user/${userId}`, {
-    method: 'DELETE'
+    method: "DELETE",
   });
 }
 
@@ -123,5 +138,5 @@ export default {
   getUserById,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
 };
