@@ -83,6 +83,26 @@
   overflow-x: auto;
 }
 
+/* Custom scrollbar for data table */
+.data-table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.data-table-wrapper::-webkit-scrollbar-track {
+  background: var(--bg-2);
+  border-radius: 3px;
+}
+
+.data-table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.data-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
 .data-table {
   width: 100%;
   border-collapse: collapse;
@@ -397,4 +417,3 @@
     order: 1;
   }
 }
-

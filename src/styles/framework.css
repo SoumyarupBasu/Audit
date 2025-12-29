@@ -2,7 +2,9 @@
 @import './theme.css';
 
 /* Ensure consistent container spacing */
-.container { padding: 0 24px 0 90px !important; }
+.container {
+  padding: 0 24px 0 90px !important;
+}
 
 /* File Information Section */
 .file-info {
@@ -340,38 +342,38 @@
   .frameworks-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .search-section {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .search-box {
     max-width: none;
   }
-  
+
   .category-filter {
     min-width: auto;
   }
-  
+
   .framework-card {
     padding: 20px;
   }
-  
+
   .framework-header {
     gap: 12px;
   }
-  
+
   .framework-icon {
     width: 48px;
     height: 48px;
     font-size: 20px;
   }
-  
+
   .framework-name {
     font-size: 16px;
   }
-  
+
   .actions {
     flex-direction: column;
   }
@@ -382,8 +384,84 @@
     flex-direction: column;
     text-align: center;
   }
-  
+
   .framework-features {
     justify-content: center;
   }
 }
+
+/* ===== CUSTOM SCROLLBAR UTILITIES ===== */
+/* Use these classes where you need custom scrollbars with overflow: auto */
+
+/* Thin scrollbar utility class */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--bg-2);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+.custom-scrollbar::-webkit-scrollbar-corner {
+  background: var(--bg-2);
+}
+
+/* Medium scrollbar utility class */
+.custom-scrollbar-md::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar-md::-webkit-scrollbar-track {
+  background: var(--bg-2);
+  border-radius: 4px;
+}
+
+.custom-scrollbar-md::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.custom-scrollbar-md::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+.custom-scrollbar-md::-webkit-scrollbar-corner {
+  background: var(--bg-2);
+}
+
+/* Invisible scrollbar utility class (for touch devices) */
+.custom-scrollbar-hidden::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+/* Firefox scrollbar support */
+.custom-scrollbar,
+.custom-scrollbar-md {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) var(--bg-2);
+}
+
+.custom-scrollbar-hidden {
+  scrollbar-width: none;
+}
+
+/* Usage Examples:
+   <div class="custom-scrollbar" style="overflow: auto; max-height: 300px;">...</div>
+   <div class="custom-scrollbar-md" style="overflow: auto; max-height: 400px;">...</div>
+   <div class="custom-scrollbar-hidden" style="overflow: auto;">...</div>
+*/
