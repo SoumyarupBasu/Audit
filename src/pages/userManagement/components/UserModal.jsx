@@ -116,9 +116,9 @@ export default function UserModal({
         className="modal-content user-modal"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="modal-header">
+        <div className="modal-header gradient-header">
           <div className="modal-title-row">
-            <Icon name={getIcon()} size="24px" color="var(--primary)" />
+            <Icon name={getIcon()} size="24px" />
             <h2 className="modal-title">{getTitle()}</h2>
           </div>
           <button className="modal-close" onClick={onClose} title="Close">

@@ -1,97 +1,100 @@
-import React, { useState, useEffect } from 'react'
-import Icon from './Icon'
-import '../styles/editControlModal.css'
+import React, { useState, useEffect } from "react";
+import Icon from "./Icon";
+import "../styles/editControlModal.css";
 
-export default function EditControlModal({ 
-  control, 
-  frameworkId, 
+export default function EditControlModal({
+  control,
+  frameworkId,
   frameworkColor,
   categories,
   types,
-  onSave, 
-  onClose 
+  onSave,
+  onClose,
 }) {
   const [formData, setFormData] = useState({
-    id: '',
-    title: '',
-    description: '',
-    category: '',
-    type: ''
-  })
-  const [errors, setErrors] = useState({})
-  const [saving, setSaving] = useState(false)
+    id: "",
+    title: "",
+    description: "",
+    category: "",
+    type: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (control) {
       setFormData({
-        id: control.id || '',
-        title: control.title || '',
-        description: control.description || '',
-        category: control.category || '',
-        type: control.type || ''
-      })
+        id: control.id || "",
+        title: control.title || "",
+        description: control.description || "",
+        category: control.category || "",
+        type: control.type || "",
+      });
     }
-  }, [control])
+  }, [control]);
 
   const validateForm = () => {
-    const newErrors = {}
+    const newErrors = {};
 
     if (!formData.id.trim()) {
-      newErrors.id = 'Control ID is required'
+      newErrors.id = "Control ID is required";
     }
 
     if (!formData.title.trim()) {
-      newErrors.title = 'Control title is required'
+      newErrors.title = "Control title is required";
     }
 
     if (!formData.description.trim()) {
-      newErrors.description = 'Control description is required'
+      newErrors.description = "Control description is required";
     }
 
     if (!formData.category.trim()) {
-      newErrors.category = 'Category is required'
+      newErrors.category = "Category is required";
     }
 
     if (!formData.type.trim()) {
-      newErrors.type = 'Type is required'
+      newErrors.type = "Type is required";
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
+    setFormData((prev) => ({ ...prev, [field]: value }));
     // Clear error for this field when user starts typing
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }))
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!validateForm()) {
-      return
+      return;
     }
 
-    setSaving(true)
+    setSaving(true);
     try {
-      await onSave(formData)
+      await onSave(formData);
     } catch (error) {
-      console.error('Error saving control:', error)
-      setErrors({ submit: 'Failed to save control. Please try again.' })
+      console.error("Error saving control:", error);
+      setErrors({ submit: "Failed to save control. Please try again." });
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content edit-control-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
+      <div
+        className="modal-content edit-control-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="modal-header gradient-header">
           <div className="modal-title-row">
-            <Icon name="edit" size="24px" color={frameworkColor} />
+            <Icon name="edit" size="24px" />
             <h2 className="modal-title">Edit Control</h2>
           </div>
           <button className="modal-close" onClick={onClose} title="Close">
@@ -107,9 +110,9 @@ export default function EditControlModal({
             <input
               id="control-id"
               type="text"
-              className={`form-input ${errors.id ? 'error' : ''}`}
+              className={`form-input ${errors.id ? "error" : ""}`}
               value={formData.id}
-              onChange={(e) => handleChange('id', e.target.value)}
+              onChange={(e) => handleChange("id", e.target.value)}
               placeholder="e.g., A.5.1, ID.AM-1, SOX-302-1"
             />
             {errors.id && <span className="error-message">{errors.id}</span>}
@@ -122,12 +125,14 @@ export default function EditControlModal({
             <input
               id="control-title"
               type="text"
-              className={`form-input ${errors.title ? 'error' : ''}`}
+              className={`form-input ${errors.title ? "error" : ""}`}
               value={formData.title}
-              onChange={(e) => handleChange('title', e.target.value)}
+              onChange={(e) => handleChange("title", e.target.value)}
               placeholder="Enter control title"
             />
-            {errors.title && <span className="error-message">{errors.title}</span>}
+            {errors.title && (
+              <span className="error-message">{errors.title}</span>
+            )}
           </div>
 
           <div className="form-group">
@@ -136,13 +141,15 @@ export default function EditControlModal({
             </label>
             <textarea
               id="control-description"
-              className={`form-textarea ${errors.description ? 'error' : ''}`}
+              className={`form-textarea ${errors.description ? "error" : ""}`}
               value={formData.description}
-              onChange={(e) => handleChange('description', e.target.value)}
+              onChange={(e) => handleChange("description", e.target.value)}
               placeholder="Enter detailed control description"
               rows="4"
             />
-            {errors.description && <span className="error-message">{errors.description}</span>}
+            {errors.description && (
+              <span className="error-message">{errors.description}</span>
+            )}
           </div>
 
           <div className="form-row">
@@ -152,16 +159,22 @@ export default function EditControlModal({
               </label>
               <select
                 id="control-category"
-                className={`form-select ${errors.category ? 'error' : ''}`}
+                className={`form-select ${errors.category ? "error" : ""}`}
                 value={formData.category}
-                onChange={(e) => handleChange('category', e.target.value)}
+                onChange={(e) => handleChange("category", e.target.value)}
               >
                 <option value="">Select category</option>
-                {categories.filter(c => c !== 'all').map(category => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
+                {categories
+                  .filter((c) => c !== "all")
+                  .map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
               </select>
-              {errors.category && <span className="error-message">{errors.category}</span>}
+              {errors.category && (
+                <span className="error-message">{errors.category}</span>
+              )}
             </div>
 
             <div className="form-group">
@@ -170,16 +183,22 @@ export default function EditControlModal({
               </label>
               <select
                 id="control-type"
-                className={`form-select ${errors.type ? 'error' : ''}`}
+                className={`form-select ${errors.type ? "error" : ""}`}
                 value={formData.type}
-                onChange={(e) => handleChange('type', e.target.value)}
+                onChange={(e) => handleChange("type", e.target.value)}
               >
                 <option value="">Select type</option>
-                {types.filter(t => t !== 'all').map(type => (
-                  <option key={type} value={type}>{type}</option>
-                ))}
+                {types
+                  .filter((t) => t !== "all")
+                  .map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
               </select>
-              {errors.type && <span className="error-message">{errors.type}</span>}
+              {errors.type && (
+                <span className="error-message">{errors.type}</span>
+              )}
             </div>
           </div>
 
@@ -221,6 +240,5 @@ export default function EditControlModal({
         </form>
       </div>
     </div>
-  )
+  );
 }
-

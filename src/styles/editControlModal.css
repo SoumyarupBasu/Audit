@@ -1,3 +1,6 @@
+/* Edit Control Modal Styles */
+@import './gradientModalHeader.css';
+
 /* Modal Overlay */
 .modal-overlay {
   position: fixed;

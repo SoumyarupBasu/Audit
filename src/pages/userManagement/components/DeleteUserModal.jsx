@@ -30,9 +30,9 @@ export default function DeleteUserModal({ user, onConfirm, onCancel }) {
         className="modal-content delete-user-modal"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="modal-header">
+        <div className="modal-header gradient-header">
           <div className="modal-title-row">
-            <Icon name="alert-triangle" size="24px" color="#ef4444" />
+            <Icon name="alert-triangle" size="24px" />
             <h2 className="modal-title">Delete User</h2>
           </div>
           <button className="modal-close" onClick={onCancel} title="Close">
