@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import DataTable from "../../components/DataTable";
 import UserModal from "./components/UserModal";
+import UserViewModal from "../../components/UserViewModal";
 import DeleteUserModal from "./components/DeleteUserModal";
 import Icon from "../../components/Icon";
 import {
@@ -38,6 +39,10 @@ function AllUsers() {
   const [modalState, setModalState] = useState({
     isOpen: false,
     mode: "view", // 'view' | 'create' | 'edit'
+    user: null,
+  });
+  const [viewModalState, setViewModalState] = useState({
+    isOpen: false,
     user: null,
   });
   const [deleteModalState, setDeleteModalState] = useState({
@@ -147,7 +152,11 @@ function AllUsers() {
 
   // Modal handlers
   const openViewModal = (user) => {
-    setModalState({ isOpen: true, mode: "view", user });
+    setViewModalState({ isOpen: true, user });
+  };
+
+  const closeViewModal = () => {
+    setViewModalState({ isOpen: false, user: null });
   };
 
   const openCreateModal = () => {
@@ -326,7 +335,19 @@ function AllUsers() {
         onClearSearch={handleClearSearch}
       />
 
-      {/* User Modal (View/Create/Edit) */}
+      {/* User View Modal (Beautiful Details View) */}
+      {viewModalState.isOpen && viewModalState.user && (
+        <UserViewModal
+          user={viewModalState.user}
+          onClose={closeViewModal}
+          onEdit={(user) => {
+            closeViewModal();
+            openEditModal(user);
+          }}
+        />
+      )}
+
+      {/* User Modal (Create/Edit) */}
       {modalState.isOpen && (
         <UserModal
           mode={modalState.mode}
