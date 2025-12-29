@@ -12,6 +12,7 @@ import {
   deleteUser,
 } from "../../services/userService";
 import "../../styles/allUsers.css";
+import { formatDate } from "../../utils/dateFormatter";
 
 function AllUsers() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -212,6 +213,12 @@ function AllUsers() {
           {value ? "Verified" : "Pending"}
         </span>
       ),
+    },
+    {
+      key: "createdAt",
+      label: "Created At",
+      sortable: true,
+      render: (value) => <span>{formatDate(value)}</span>,
     },
   ];
 
