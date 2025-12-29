@@ -1,7 +1,6 @@
 /* All Users Page Styles */
 
 .users-page {
-  padding: var(--spacing-lg);
   margin: 0 auto;
 }
 
@@ -152,9 +151,6 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .users-page {
-    padding: var(--spacing-md);
-  }
 
   .page-header {
     flex-direction: column;
