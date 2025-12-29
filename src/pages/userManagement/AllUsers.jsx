@@ -218,7 +218,7 @@ function AllUsers() {
       key: "createdAt",
       label: "Created At",
       sortable: true,
-      render: (value) => <span>{formatDate(value)}</span>,
+      render: (value) => formatDate(value),
     },
   ];
 
