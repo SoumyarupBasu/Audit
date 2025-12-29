@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import DataTable from "../../components/DataTable";
 import UserModal from "./components/UserModal";
-import UserViewModal from "../../components/UserViewModal";
+import UserViewModal from "./components/UserViewModal";
 import DeleteUserModal from "./components/DeleteUserModal";
 import Icon from "../../components/Icon";
 import {

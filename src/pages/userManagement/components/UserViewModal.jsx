@@ -1,7 +1,6 @@
-import React from "react";
-import Icon from "./Icon";
-import { formatDate } from "../utils/dateFormatter";
-import "../styles/userViewModal.css";
+import Icon from "../../../components/Icon";
+import { formatDate } from "../../../utils/dateFormatter";
+import "../../../styles/userViewModal.css";
 
 /**
  * UserViewModal Component - Beautiful user details display
