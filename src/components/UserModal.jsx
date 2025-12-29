@@ -1,112 +1,123 @@
-import React, { useState, useEffect } from 'react'
-import Icon from './Icon'
-import '../styles/editControlModal.css'
-import '../styles/userModal.css'
+import { useState, useEffect } from "react";
+import Icon from "./Icon";
+import "../styles/editControlModal.css";
+import "../styles/userModal.css";
+import toast from "react-hot-toast";
 
 /**
  * UserModal Component - Handles View, Create, and Edit modes
- * 
+ *
  * @param {string} mode - 'view' | 'create' | 'edit'
  * @param {Object} user - User data (for view/edit modes)
  * @param {Function} onSave - Save handler for create/edit
  * @param {Function} onClose - Close handler
  */
-export default function UserModal({ mode = 'view', user = null, onSave, onClose }) {
+export default function UserModal({
+  mode = "view",
+  user = null,
+  onSave,
+  onClose,
+}) {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    role: 'user',
-    isVerified: false,
-    password: ''
-  })
-  const [errors, setErrors] = useState({})
-  const [saving, setSaving] = useState(false)
+    name: "",
+    email: "",
+    phone: "",
+    role: "user",
+  });
+  const [generatedPassword, setGeneratedPassword] = useState("");
+  const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
+
+  const isReadOnly = mode === "view";
 
   useEffect(() => {
-    if (user && (mode === 'view' || mode === 'edit')) {
+    if (user && (mode === "view" || mode === "edit")) {
       setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        phone: user.phone || '',
-        role: user.role || 'user',
-        isVerified: user.isVerified || false,
-        password: ''
-      })
+        name: user.name || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        role: user.role || "user",
+      });
     }
-  }, [user, mode])
-
-  const validateForm = () => {
-    const newErrors = {}
-    
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required'
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required'
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Invalid email format'
-    }
-    
-    if (mode === 'create' && !formData.password) {
-      newErrors.password = 'Password is required for new users'
-    } else if (formData.password && formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters'
-    }
-    
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+  }, [user, mode]);
 
   const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: null }))
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: null }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
     }
-  }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Invalid email format";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    
-    if (!validateForm()) return
-    
-    setSaving(true)
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    setSaving(true);
     try {
-      const dataToSave = { ...formData }
-      if (!dataToSave.password) {
-        delete dataToSave.password
+      const response = await onSave(formData);
+      // backend returns temp password on create
+      if (mode === "create" && response?.user?.temporaryPassword) {
+        setGeneratedPassword(response.user.temporaryPassword);
+      } else {
+        onClose();
       }
-      await onSave(dataToSave)
     } catch (error) {
-      console.error('Error saving user:', error)
-      setErrors({ submit: error.message || 'Failed to save user. Please try again.' })
+      console.error("Error saving user:", error);
+      toast.error(error.message || "Failed to save user");
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   const getTitle = () => {
     switch (mode) {
-      case 'create': return 'Create New User'
-      case 'edit': return 'Edit User'
-      default: return 'User Details'
+      case "create":
+        return "Create New User";
+      case "edit":
+        return "Edit User";
+      default:
+        return "User Details";
     }
-  }
+  };
 
   const getIcon = () => {
     switch (mode) {
-      case 'create': return 'plus'
-      case 'edit': return 'edit'
-      default: return 'user'
+      case "create":
+        return "plus";
+      case "edit":
+        return "edit";
+      default:
+        return "user";
     }
-  }
+  };
 
-  const isReadOnly = mode === 'view'
+  const copyPassword = async () => {
+    await navigator.clipboard.writeText(generatedPassword);
+    toast.success("Password copied to clipboard");
+  };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content user-modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal-content user-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="modal-header">
           <div className="modal-title-row">
             <Icon name={getIcon()} size="24px" color="var(--primary)" />
@@ -124,18 +135,20 @@ export default function UserModal({ mode = 'view', user = null, onSave, onClose 
               Full Name {!isReadOnly && <span className="required">*</span>}
             </label>
             {isReadOnly ? (
-              <div className="form-value">{formData.name || '-'}</div>
+              <div className="form-value">{formData.name || "-"}</div>
             ) : (
               <>
                 <input
                   id="user-name"
                   type="text"
-                  className={`form-input ${errors.name ? 'error' : ''}`}
+                  className={`form-input ${errors.name ? "error" : ""}`}
                   value={formData.name}
-                  onChange={(e) => handleChange('name', e.target.value)}
+                  onChange={(e) => handleChange("name", e.target.value)}
                   placeholder="Enter full name"
                 />
-                {errors.name && <span className="error-message">{errors.name}</span>}
+                {errors.name && (
+                  <span className="error-message">{errors.name}</span>
+                )}
               </>
             )}
           </div>
@@ -146,109 +159,82 @@ export default function UserModal({ mode = 'view', user = null, onSave, onClose 
               Email Address {!isReadOnly && <span className="required">*</span>}
             </label>
             {isReadOnly ? (
-              <div className="form-value">{formData.email || '-'}</div>
+              <div className="form-value">{formData.email || "-"}</div>
             ) : (
               <>
                 <input
                   id="user-email"
                   type="email"
-                  className={`form-input ${errors.email ? 'error' : ''}`}
+                  className={`form-input ${errors.email ? "error" : ""}`}
                   value={formData.email}
-                  onChange={(e) => handleChange('email', e.target.value)}
+                  onChange={(e) => handleChange("email", e.target.value)}
                   placeholder="Enter email address"
-                  disabled={mode === 'edit'}
+                  disabled={mode === "edit"}
                 />
-                {errors.email && <span className="error-message">{errors.email}</span>}
+                {errors.email && (
+                  <span className="error-message">{errors.email}</span>
+                )}
               </>
             )}
           </div>
 
           {/* Phone Field */}
           <div className="form-group">
-            <label htmlFor="user-phone" className="form-label">Phone Number</label>
+            <label htmlFor="user-phone" className="form-label">
+              Phone Number
+            </label>
             {isReadOnly ? (
-              <div className="form-value">{formData.phone || '-'}</div>
+              <div className="form-value">{formData.phone || "-"}</div>
             ) : (
               <input
                 id="user-phone"
                 type="tel"
                 className="form-input"
                 value={formData.phone}
-                onChange={(e) => handleChange('phone', e.target.value)}
+                onChange={(e) => handleChange("phone", e.target.value)}
                 placeholder="Enter phone number"
               />
             )}
           </div>
 
-          {/* Role and Verification Status Row */}
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="user-role" className="form-label">Role</label>
-              {isReadOnly ? (
-                <div className="form-value">
-                  <span className={`status-badge ${formData.role}`}>
-                    {formData.role}
-                  </span>
-                </div>
-              ) : (
-                <select
-                  id="user-role"
-                  className="form-select"
-                  value={formData.role}
-                  onChange={(e) => handleChange('role', e.target.value)}
-                >
-                  <option value="user">User</option>
-                  <option value="expert">Expert</option>
-                  <option value="admin">Admin</option>
-                </select>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="user-verified" className="form-label">Verification Status</label>
-              {isReadOnly ? (
-                <div className="form-value">
-                  <span className={`status-badge ${formData.isVerified ? 'verified' : 'pending'}`}>
-                    {formData.isVerified ? 'Verified' : 'Pending'}
-                  </span>
-                </div>
-              ) : (
-                <div className="toggle-wrapper">
-                  <label className="toggle-switch">
-                    <input
-                      type="checkbox"
-                      checked={formData.isVerified}
-                      onChange={(e) => handleChange('isVerified', e.target.checked)}
-                    />
-                    <span className="toggle-slider"></span>
-                  </label>
-                  <span className="toggle-label">
-                    {formData.isVerified ? 'Verified' : 'Not Verified'}
-                  </span>
-                </div>
-              )}
-            </div>
+          {/* Role */}
+          <div className="form-group">
+            <label htmlFor="user-role" className="form-label">
+              Role
+            </label>
+            {isReadOnly ? (
+              <div className="form-value">
+                <span className={`status-badge ${formData.role}`}>
+                  {formData.role}
+                </span>
+              </div>
+            ) : (
+              <select
+                id="user-role"
+                className="form-select"
+                value={formData.role}
+                onChange={(e) => handleChange("role", e.target.value)}
+              >
+                <option value="expert">Expert</option>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+              </select>
+            )}
           </div>
 
-          {/* Password Field (only for create/edit) */}
-          {!isReadOnly && (
-            <div className="form-group">
-              <label htmlFor="user-password" className="form-label">
-                {mode === 'create' ? 'Password' : 'New Password'}
-                {mode === 'create' && <span className="required">*</span>}
-              </label>
-              <input
-                id="user-password"
-                type="password"
-                className={`form-input ${errors.password ? 'error' : ''}`}
-                value={formData.password}
-                onChange={(e) => handleChange('password', e.target.value)}
-                placeholder={mode === 'create' ? 'Enter password' : 'Leave blank to keep current'}
-              />
-              {errors.password && <span className="error-message">{errors.password}</span>}
-              {mode === 'edit' && (
-                <span className="form-hint">Leave blank to keep the current password</span>
-              )}
+          {/* GENERATED PASSWORD SECTION */}
+          {generatedPassword && (
+            <div className="generated-password-box">
+              <p className="info-text">
+                ⚠️ This password is auto-generated. Copy and share it securely.
+              </p>
+              <div className="password-row">
+                <code>{generatedPassword}</code>
+                <button type="button" onClick={copyPassword}>
+                  <Icon name="copy" size="16px" />
+                  Copy
+                </button>
+              </div>
             </div>
           )}
 
@@ -257,11 +243,21 @@ export default function UserModal({ mode = 'view', user = null, onSave, onClose 
             <div className="user-meta">
               <div className="meta-item">
                 <Icon name="calendar" size="16px" />
-                <span>Created: {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-'}</span>
+                <span>
+                  Created:{" "}
+                  {user.createdAt
+                    ? new Date(user.createdAt).toLocaleDateString()
+                    : "-"}
+                </span>
               </div>
               <div className="meta-item">
                 <Icon name="clock" size="16px" />
-                <span>Last Updated: {user.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : '-'}</span>
+                <span>
+                  Last Updated:{" "}
+                  {user.updatedAt
+                    ? new Date(user.updatedAt).toLocaleDateString()
+                    : "-"}
+                </span>
               </div>
             </div>
           )}
@@ -275,7 +271,7 @@ export default function UserModal({ mode = 'view', user = null, onSave, onClose 
 
           <div className="modal-actions">
             <button type="button" className="btn-secondary" onClick={onClose}>
-              {isReadOnly ? 'Close' : 'Cancel'}
+              {isReadOnly ? "Close" : "Cancel"}
             </button>
             {!isReadOnly && (
               <button type="submit" className="btn-primary" disabled={saving}>
@@ -287,7 +283,7 @@ export default function UserModal({ mode = 'view', user = null, onSave, onClose 
                 ) : (
                   <>
                     <Icon name="check" size="16px" />
-                    {mode === 'create' ? 'Create User' : 'Save Changes'}
+                    {mode === "create" ? "Create User" : "Save Changes"}
                   </>
                 )}
               </button>
@@ -296,5 +292,5 @@ export default function UserModal({ mode = 'view', user = null, onSave, onClose 
         </form>
       </div>
     </div>
-  )
+  );
 }

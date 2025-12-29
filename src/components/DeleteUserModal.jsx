@@ -1,32 +1,35 @@
-import React, { useState } from 'react'
-import Icon from './Icon'
-import '../styles/editControlModal.css'
-import '../styles/userModal.css'
+import React, { useState } from "react";
+import Icon from "./Icon";
+import "../styles/editControlModal.css";
+import "../styles/userModal.css";
 
 /**
  * DeleteUserModal Component - Confirmation dialog for deleting a user
- * 
+ *
  * @param {Object} user - User to delete
  * @param {Function} onConfirm - Confirm delete handler
  * @param {Function} onCancel - Cancel handler
  */
 export default function DeleteUserModal({ user, onConfirm, onCancel }) {
-  const [deleting, setDeleting] = useState(false)
+  const [deleting, setDeleting] = useState(false);
 
   const handleConfirm = async () => {
-    setDeleting(true)
+    setDeleting(true);
     try {
-      await onConfirm()
+      await onConfirm();
     } catch (error) {
-      console.error('Error deleting user:', error)
+      console.error("Error deleting user:", error);
     } finally {
-      setDeleting(false)
+      setDeleting(false);
     }
-  }
+  };
 
   return (
     <div className="modal-overlay" onClick={onCancel}>
-      <div className="modal-content delete-user-modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal-content delete-user-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="modal-header">
           <div className="modal-title-row">
             <Icon name="alert-triangle" size="24px" color="#ef4444" />
@@ -39,7 +42,8 @@ export default function DeleteUserModal({ user, onConfirm, onCancel }) {
 
         <div className="delete-user-content">
           <p className="delete-warning-text">
-            Are you sure you want to delete this user? This action cannot be undone and will permanently remove all associated data.
+            Are you sure you want to delete this user? This action cannot be
+            undone and will permanently remove all associated data.
           </p>
 
           <div className="user-preview">
@@ -53,11 +57,13 @@ export default function DeleteUserModal({ user, onConfirm, onCancel }) {
               </div>
             </div>
             <div className="user-preview-badges">
-              <span className={`status-badge ${user.role}`}>
-                {user.role}
-              </span>
-              <span className={`status-badge ${user.isVerified ? 'verified' : 'pending'}`}>
-                {user.isVerified ? 'Verified' : 'Pending'}
+              <span className={`status-badge ${user.role}`}>{user.role}</span>
+              <span
+                className={`status-badge ${
+                  user.isEmailVerified ? "verified" : "pending"
+                }`}
+              >
+                {user.isEmailVerified ? "Verified" : "Pending"}
               </span>
             </div>
           </div>
@@ -93,6 +99,5 @@ export default function DeleteUserModal({ user, onConfirm, onCancel }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
-

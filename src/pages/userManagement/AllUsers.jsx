@@ -1,12 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import DataTable from '../../components/DataTable';
-import UserModal from '../../components/UserModal';
-import DeleteUserModal from '../../components/DeleteUserModal';
-import Icon from '../../components/Icon';
-import { getAllUsers, createUser, updateUser, deleteUser } from '../../services/userService';
-import '../../styles/allUsers.css';
+import React, { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import DataTable from "../../components/DataTable";
+import UserModal from "../../components/UserModal";
+import DeleteUserModal from "../../components/DeleteUserModal";
+import Icon from "../../components/Icon";
+import {
+  getAllUsers,
+  createUser,
+  updateUser,
+  deleteUser,
+} from "../../services/userService";
+import "../../styles/allUsers.css";
 
 function AllUsers() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,27 +25,27 @@ function AllUsers() {
     totalItems: 0,
     limit: 10,
     hasPrevPage: false,
-    hasNextPage: false
+    hasNextPage: false,
   });
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Modal states
   const [modalState, setModalState] = useState({
     isOpen: false,
-    mode: 'view', // 'view' | 'create' | 'edit'
-    user: null
+    mode: "view", // 'view' | 'create' | 'edit'
+    user: null,
   });
   const [deleteModalState, setDeleteModalState] = useState({
     isOpen: false,
-    user: null
+    user: null,
   });
 
   // Sync URL params with state
   useEffect(() => {
-    const page = parseInt(searchParams.get('page')) || 1;
-    const search = searchParams.get('search') || '';
+    const page = parseInt(searchParams.get("page")) || 1;
+    const search = searchParams.get("search") || "";
 
-    setPagination(prev => ({ ...prev, currentPage: page }));
+    setPagination((prev) => ({ ...prev, currentPage: page }));
     setSearchTerm(search);
   }, [searchParams]);
 
@@ -51,20 +56,23 @@ function AllUsers() {
       const response = await getAllUsers({
         page: pagination.currentPage,
         limit: pagination.limit,
-        search: searchTerm
+        search: searchTerm,
       });
 
       setUsers(response.data || response.users || []);
-      setPagination(prev => ({
+      setPagination((prev) => ({
         ...prev,
         totalPages: response.pagination?.totalPages || response.totalPages || 1,
         totalItems: response.pagination?.totalItems || response.total || 0,
-        hasPrevPage: response.pagination?.hasPrevPage ?? (pagination.currentPage > 1),
-        hasNextPage: response.pagination?.hasNextPage ?? (pagination.currentPage < (response.pagination?.totalPages || 1))
+        hasPrevPage:
+          response.pagination?.hasPrevPage ?? pagination.currentPage > 1,
+        hasNextPage:
+          response.pagination?.hasNextPage ??
+          pagination.currentPage < (response.pagination?.totalPages || 1),
       }));
     } catch (error) {
-      console.error('Error fetching users:', error);
-      toast.error(error.message || 'Failed to fetch users');
+      console.error("Error fetching users:", error);
+      toast.error(error.message || "Failed to fetch users");
       setUsers([]);
     } finally {
       setLoading(false);
@@ -78,40 +86,40 @@ function AllUsers() {
   // Handle page change
   const handlePageChange = (newPage) => {
     const params = new URLSearchParams(searchParams);
-    params.set('page', newPage.toString());
+    params.set("page", newPage.toString());
     setSearchParams(params);
-    setPagination(prev => ({ ...prev, currentPage: newPage }));
+    setPagination((prev) => ({ ...prev, currentPage: newPage }));
   };
 
   // Handle search
   const handleSearch = (term) => {
     const params = new URLSearchParams(searchParams);
     if (term) {
-      params.set('search', term);
+      params.set("search", term);
     } else {
-      params.delete('search');
+      params.delete("search");
     }
-    params.set('page', '1');
+    params.set("page", "1");
     setSearchParams(params);
     setSearchTerm(term);
-    setPagination(prev => ({ ...prev, currentPage: 1 }));
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
   };
 
   // Modal handlers
   const openViewModal = (user) => {
-    setModalState({ isOpen: true, mode: 'view', user });
+    setModalState({ isOpen: true, mode: "view", user });
   };
 
   const openCreateModal = () => {
-    setModalState({ isOpen: true, mode: 'create', user: null });
+    setModalState({ isOpen: true, mode: "create", user: null });
   };
 
   const openEditModal = (user) => {
-    setModalState({ isOpen: true, mode: 'edit', user });
+    setModalState({ isOpen: true, mode: "edit", user });
   };
 
   const closeModal = () => {
-    setModalState({ isOpen: false, mode: 'view', user: null });
+    setModalState({ isOpen: false, mode: "view", user: null });
   };
 
   const openDeleteModal = (user) => {
@@ -125,12 +133,16 @@ function AllUsers() {
   // CRUD handlers
   const handleSaveUser = async (userData) => {
     try {
-      if (modalState.mode === 'create') {
-        await createUser(userData);
-        toast.success('User created successfully');
+      if (modalState.mode === "create") {
+        const response = await createUser(userData);
+        toast.success(response.message || "User created successfully");
+        return response;
       } else {
-        await updateUser(modalState.user._id || modalState.user.id, userData);
-        toast.success('User updated successfully');
+        const response = await updateUser(
+          modalState.user._id || modalState.user.id,
+          userData
+        );
+        toast.success(response.message || "User updated successfully");
       }
       closeModal();
       fetchUsers();
@@ -142,19 +154,19 @@ function AllUsers() {
   const handleDeleteUser = async () => {
     try {
       await deleteUser(deleteModalState.user._id || deleteModalState.user.id);
-      toast.success('User deleted successfully');
+      toast.success("User deleted successfully");
       closeDeleteModal();
       fetchUsers();
     } catch (error) {
-      toast.error(error.message || 'Failed to delete user');
+      toast.error(error.message || "Failed to delete user");
     }
   };
 
   // Table columns configuration
   const columns = [
     {
-      key: 'name',
-      label: 'Name',
+      key: "name",
+      label: "Name",
       sortable: true,
       render: (value, row) => (
         <div className="user-cell">
@@ -163,39 +175,37 @@ function AllUsers() {
           </div>
           <span className="user-name-text">{value}</span>
         </div>
-      )
+      ),
     },
     {
-      key: 'email',
-      label: 'Email',
-      sortable: true
+      key: "email",
+      label: "Email",
+      sortable: true,
     },
     {
-      key: 'phone',
-      label: 'Phone',
+      key: "phone",
+      label: "Phone",
       sortable: false,
-      render: (value) => value || '-'
+      render: (value) => value || "-",
     },
     {
-      key: 'role',
-      label: 'Role',
+      key: "role",
+      label: "Role",
       sortable: true,
       render: (value) => (
-        <span className={`status-badge ${value}`}>
-          {value}
-        </span>
-      )
+        <span className={`status-badge ${value}`}>{value}</span>
+      ),
     },
     {
-      key: 'isVerified',
-      label: 'Status',
+      key: "isEmailVerified",
+      label: "Status",
       sortable: true,
       render: (value) => (
-        <span className={`status-badge ${value ? 'verified' : 'pending'}`}>
-          {value ? 'Verified' : 'Pending'}
+        <span className={`status-badge ${value ? "verified" : "pending"}`}>
+          {value ? "Verified" : "Pending"}
         </span>
-      )
-    }
+      ),
+    },
   ];
 
   // Render action buttons for each row
@@ -230,7 +240,9 @@ function AllUsers() {
       <div className="page-header">
         <div className="page-title-section">
           <h1 className="page-title">User Management</h1>
-          <p className="page-subtitle">Manage system users and their permissions</p>
+          <p className="page-subtitle">
+            Manage system users and their permissions
+          </p>
         </div>
         <button className="btn-primary create-btn" onClick={openCreateModal}>
           <Icon name="plus" size="16px" />
@@ -244,7 +256,7 @@ function AllUsers() {
         loading={loading}
         pagination={{
           ...pagination,
-          onPageChange: handlePageChange
+          onPageChange: handlePageChange,
         }}
         onSearch={handleSearch}
         searchPlaceholder="Search users by name or email..."
