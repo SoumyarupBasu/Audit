@@ -102,6 +102,11 @@ export default function DataTable({
     debouncedSearch(value);
   };
 
+  const getSerialNumber = (index, pagination) => {
+    if (!pagination) return index + 1;
+    return (pagination.currentPage - 1) * pagination.limit + index + 1;
+  };
+
   // Render sort indicator
   const renderSortIndicator = (column) => {
     if (!column.sortable) return null;
@@ -178,6 +183,7 @@ export default function DataTable({
         <table className="data-table">
           <thead>
             <tr>
+              <th className="w-5">S/N</th>
               {columns.map((column) => (
                 <th
                   key={column.key}
@@ -197,7 +203,7 @@ export default function DataTable({
             {loading ? (
               <tr>
                 <td
-                  colSpan={columns.length + (renderActions ? 1 : 0)}
+                  colSpan={columns.length + 1 + (renderActions ? 1 : 0)}
                   className="loading-cell"
                 >
                   <div className="loading-spinner">
@@ -209,7 +215,7 @@ export default function DataTable({
             ) : sortedData.length === 0 ? (
               <tr>
                 <td
-                  colSpan={columns.length + (renderActions ? 1 : 0)}
+                  colSpan={columns.length + 1 + (renderActions ? 1 : 0)}
                   className="empty-cell"
                 >
                   <div className="empty-state">
@@ -221,6 +227,8 @@ export default function DataTable({
             ) : (
               sortedData.map((row, index) => (
                 <tr key={row.id || index}>
+                  {/* SR NO */}
+                  <td className="">{getSerialNumber(index, pagination)}</td>
                   {columns.map((column) => (
                     <td key={column.key}>
                       {column.render

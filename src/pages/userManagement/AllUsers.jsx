@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import DataTable from "../../components/DataTable";
@@ -175,7 +175,7 @@ function AllUsers() {
     {
       key: "name",
       label: "Name",
-      sortable: true,
+      sortable: false,
       render: (value, row) => (
         <div className="user-cell">
           <div className="user-avatar-small">
@@ -188,7 +188,7 @@ function AllUsers() {
     {
       key: "email",
       label: "Email",
-      sortable: true,
+      sortable: false,
     },
     {
       key: "phone",
@@ -199,7 +199,7 @@ function AllUsers() {
     {
       key: "role",
       label: "Role",
-      sortable: true,
+      sortable: false,
       render: (value) => (
         <span className={`status-badge ${value}`}>{value}</span>
       ),
@@ -207,7 +207,7 @@ function AllUsers() {
     {
       key: "isEmailVerified",
       label: "Status",
-      sortable: true,
+      sortable: false,
       render: (value) => (
         <span className={`status-badge ${value ? "verified" : "pending"}`}>
           {value ? "Verified" : "Pending"}
