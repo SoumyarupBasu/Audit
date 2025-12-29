@@ -55,14 +55,22 @@ async function apiRequest(endpoint, options = {}) {
 }
 
 /**
- * Get all users with pagination and search
- * GET /api/users?page=1&limit=10&search=query
+ * Get all users with pagination, search, and sorting
+ * GET /api/users?page=1&limit=10&search=query&sortBy=field&sortOrder=asc/desc
  */
-export async function getAllUsers({ page = 1, limit = 10, search = "" } = {}) {
+export async function getAllUsers({
+  page = 1,
+  limit = 10,
+  search = "",
+  sortBy = "",
+  sortOrder = "",
+} = {}) {
   const params = new URLSearchParams({
     page: page.toString(),
     limit: limit.toString(),
     ...(search && { search }),
+    ...(sortBy && { sortBy }),
+    ...(sortOrder && { sortOrder }),
   });
 
   return apiRequest(`/user/all-users?${params.toString()}`);

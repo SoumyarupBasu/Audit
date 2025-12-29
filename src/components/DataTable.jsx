@@ -23,6 +23,8 @@ function debounce(func, wait) {
  * @param {Array} data - Array of data objects
  * @param {Object} pagination - Pagination config {currentPage, totalPages, totalItems, limit, onPageChange}
  * @param {Function} onSearch - Search handler function
+ * @param {Function} onSort - Sort handler function (for server-side sorting)
+ * @param {Object} sortConfig - Current sort configuration {sortBy, sortOrder}
  * @param {boolean} loading - Loading state
  * @param {string} emptyMessage - Message to show when no data
  * @param {Function} renderActions - Function to render action buttons for each row
@@ -33,6 +35,8 @@ export default function DataTable({
   data = [],
   pagination = null,
   onSearch,
+  onSort,
+  sortConfig = { sortBy: null, sortOrder: "asc" },
   loading = false,
   emptyMessage = "No data found",
   renderActions,
@@ -42,7 +46,6 @@ export default function DataTable({
   onClearSearch,
 }) {
   const [searchTerm, setSearchTerm] = useState(externalSearchTerm);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [isSearching, setIsSearching] = useState(false);
 
   // Sync external search term with internal state
@@ -73,26 +76,24 @@ export default function DataTable({
   const handleSort = (key) => {
     if (!columns.find((col) => col.key === key)?.sortable) return;
 
-    let direction = "asc";
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
+    // Use server-side sorting if onSort function is provided
+    if (onSort) {
+      onSort(key);
+    } else {
+      // Fallback to client-side sorting (legacy behavior)
+      let direction = "asc";
+      if (sortConfig.sortBy === key && sortConfig.sortOrder === "asc") {
+        direction = "desc";
+      }
+      // Note: This won't work with server-side pagination
+      console.warn(
+        "Client-side sorting with server-side pagination is not recommended"
+      );
     }
-    setSortConfig({ key, direction });
   };
 
-  // Sort data locally if no server-side pagination
-  const sortedData = useMemo(() => {
-    if (!sortConfig.key || pagination) return data;
-
-    return [...data].sort((a, b) => {
-      const aVal = a[sortConfig.key];
-      const bVal = b[sortConfig.key];
-
-      if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
-      if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
-      return 0;
-    });
-  }, [data, sortConfig, pagination]);
+  // Remove client-side sorting since we're using server-side sorting
+  const sortedData = data;
 
   // Handle search with debouncing
   const handleSearchChange = (e) => {
@@ -111,11 +112,11 @@ export default function DataTable({
   const renderSortIndicator = (column) => {
     if (!column.sortable) return null;
 
-    if (sortConfig.key === column.key) {
+    if (sortConfig.sortBy === column.key) {
       return (
         <span className="sort-indicator active">
           <Icon
-            name={sortConfig.direction === "asc" ? "arrow-up" : "arrow-down"}
+            name={sortConfig.sortOrder === "asc" ? "arrow-up" : "arrow-down"}
             size="12px"
           />
         </span>

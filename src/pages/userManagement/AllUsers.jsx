@@ -29,6 +29,10 @@ function AllUsers() {
     hasNextPage: false,
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortConfig, setSortConfig] = useState({
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  });
 
   // Modal states
   const [modalState, setModalState] = useState({
@@ -45,9 +49,12 @@ function AllUsers() {
   useEffect(() => {
     const page = parseInt(searchParams.get("page")) || 1;
     const search = searchParams.get("search") || "";
+    const sortBy = searchParams.get("sortBy") || "createdAt";
+    const sortOrder = searchParams.get("sortOrder") || "desc";
 
     setPagination((prev) => ({ ...prev, currentPage: page }));
     setSearchTerm(search);
+    setSortConfig({ sortBy, sortOrder });
   }, [searchParams]);
 
   // Fetch users
@@ -58,6 +65,8 @@ function AllUsers() {
         page: pagination.currentPage,
         limit: pagination.limit,
         search: searchTerm,
+        sortBy: sortConfig.sortBy,
+        sortOrder: sortConfig.sortOrder,
       });
 
       setUsers(response.data || response.users || []);
@@ -78,7 +87,13 @@ function AllUsers() {
     } finally {
       setLoading(false);
     }
-  }, [pagination.currentPage, pagination.limit, searchTerm]);
+  }, [
+    pagination.currentPage,
+    pagination.limit,
+    searchTerm,
+    sortConfig.sortBy,
+    sortConfig.sortOrder,
+  ]);
 
   useEffect(() => {
     fetchUsers();
@@ -103,6 +118,25 @@ function AllUsers() {
     params.set("page", "1"); // Reset to first page on search
     setSearchParams(params);
     setSearchTerm(term);
+    setPagination((prev) => ({ ...prev, currentPage: 1 }));
+  };
+
+  // Handle sorting
+  const handleSort = (sortBy) => {
+    const params = new URLSearchParams(searchParams);
+
+    // Toggle sort order if same field, otherwise default to asc
+    let newSortOrder = "asc";
+    if (sortConfig.sortBy === sortBy && sortConfig.sortOrder === "asc") {
+      newSortOrder = "desc";
+    }
+
+    params.set("sortBy", sortBy);
+    params.set("sortOrder", newSortOrder);
+    params.set("page", "1"); // Reset to first page on sort
+    setSearchParams(params);
+
+    setSortConfig({ sortBy, sortOrder: newSortOrder });
     setPagination((prev) => ({ ...prev, currentPage: 1 }));
   };
 
@@ -175,7 +209,7 @@ function AllUsers() {
     {
       key: "name",
       label: "Name",
-      sortable: false,
+      sortable: true,
       render: (value, row) => (
         <div className="user-cell">
           <div className="user-avatar-small">
@@ -188,18 +222,18 @@ function AllUsers() {
     {
       key: "email",
       label: "Email",
-      sortable: false,
+      sortable: true,
     },
     {
       key: "phone",
       label: "Phone",
-      sortable: false,
+      sortable: true,
       render: (value) => value || "-",
     },
     {
       key: "role",
       label: "Role",
-      sortable: false,
+      sortable: true,
       render: (value) => (
         <span className={`status-badge ${value}`}>{value}</span>
       ),
@@ -207,7 +241,7 @@ function AllUsers() {
     {
       key: "isEmailVerified",
       label: "Status",
-      sortable: false,
+      sortable: true,
       render: (value) => (
         <span className={`status-badge ${value ? "verified" : "pending"}`}>
           {value ? "Verified" : "Pending"}
@@ -278,6 +312,8 @@ function AllUsers() {
           onPageChange: handlePageChange,
         }}
         onSearch={handleSearch}
+        onSort={handleSort}
+        sortConfig={sortConfig}
         searchPlaceholder="Search users by name, email, or phone..."
         emptyMessage={
           searchTerm
