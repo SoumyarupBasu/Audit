@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import DataTable from "../../components/DataTable";
-import UserModal from "../../components/UserModal";
-import DeleteUserModal from "../../components/DeleteUserModal";
+import UserModal from "./components/UserModal";
+import DeleteUserModal from "./components/DeleteUserModal";
 import Icon from "../../components/Icon";
 import {
   getAllUsers,

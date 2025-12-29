@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import Icon from "./Icon";
-import "../styles/editControlModal.css";
-import "../styles/userModal.css";
+import Icon from "../../../components/Icon";
+import "../../../styles/editControlModal.css";
+import "../../../styles/userModal.css";
 import toast from "react-hot-toast";
 
 /**
