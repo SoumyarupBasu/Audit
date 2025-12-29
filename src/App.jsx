@@ -30,6 +30,9 @@ function App() {
                   <Toaster
                     position="top-center"
                     gutter={10}
+                    containerStyle={{
+                      zIndex: 99999, // Higher than modal z-index (10000)
+                    }}
                     toastOptions={{
                       duration: 2000,
                       style: {
@@ -40,6 +43,7 @@ function App() {
                         boxShadow: "var(--shadow-md)",
                         fontSize: "var(--font-size-sm)",
                         fontFamily: "var(--font-family)",
+                        zIndex: 99999, // Ensure individual toasts also have high z-index
                       },
 
                       success: {
@@ -51,6 +55,7 @@ function App() {
                         style: {
                           borderLeft: "4px solid var(--success)",
                           background: "var(--bg-2)",
+                          zIndex: 99999,
                         },
                       },
 
@@ -63,6 +68,7 @@ function App() {
                         style: {
                           borderLeft: "4px solid var(--error)",
                           background: "var(--bg-2)",
+                          zIndex: 99999,
                         },
                       },
 

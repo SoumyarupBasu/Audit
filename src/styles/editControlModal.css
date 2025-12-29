@@ -1,3 +1,6 @@
+/* Edit Control Modal Styles */
+@import './gradientModalHeader.css';
+
 /* Modal Overlay */
 .modal-overlay {
   position: fixed;
@@ -18,6 +21,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -35,11 +39,32 @@
   animation: slideUp 0.3s ease;
 }
 
+/* Apply custom scrollbar to modal content */
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: var(--bg-2);
+  border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
 @keyframes slideUp {
   from {
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -374,6 +399,26 @@
   gap: var(--spacing-sm);
   max-height: 400px;
   overflow-y: auto;
+}
+
+/* Custom scrollbar for framework list */
+.framework-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.framework-list::-webkit-scrollbar-track {
+  background: var(--bg-2);
+  border-radius: 3px;
+}
+
+.framework-list::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.framework-list::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
 }
 
 .framework-option {

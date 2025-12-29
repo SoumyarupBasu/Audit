@@ -1,58 +1,62 @@
-import React, { useState, useEffect } from 'react'
-import Icon from './Icon'
-import '../styles/editControlModal.css'
+import React, { useState, useEffect } from "react";
+import Icon from "./Icon";
+import "../styles/editControlModal.css";
 
-export default function FrameworkSelectModal({ 
+export default function FrameworkSelectModal({
   isOpen,
   onClose,
   onSelect,
-  title = "Select Framework for Comparison"
+  title = "Select Framework for Comparison",
 }) {
-  const [frameworks, setFrameworks] = useState({ predefined: [], custom: [] })
-  const [loading, setLoading] = useState(true)
-  const [selectedFramework, setSelectedFramework] = useState(null)
-  const [activeTab, setActiveTab] = useState('predefined')
+  const [frameworks, setFrameworks] = useState({ predefined: [], custom: [] });
+  const [loading, setLoading] = useState(true);
+  const [selectedFramework, setSelectedFramework] = useState(null);
+  const [activeTab, setActiveTab] = useState("predefined");
 
   useEffect(() => {
     if (isOpen) {
-      loadFrameworks()
+      loadFrameworks();
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   async function loadFrameworks() {
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await fetch('http://localhost:3001/api/compare/frameworks')
+      const response = await fetch(
+        "http://localhost:3001/api/compare/frameworks"
+      );
       if (response.ok) {
-        const data = await response.json()
-        setFrameworks(data)
+        const data = await response.json();
+        setFrameworks(data);
       }
     } catch (error) {
-      console.error('Error loading frameworks:', error)
+      console.error("Error loading frameworks:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   function handleSelect() {
     if (selectedFramework) {
-      onSelect(selectedFramework)
-      onClose()
+      onSelect(selectedFramework);
+      onClose();
     }
   }
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
-  const currentFrameworks = activeTab === 'predefined' 
-    ? frameworks.predefined 
-    : frameworks.custom
+  const currentFrameworks =
+    activeTab === "predefined" ? frameworks.predefined : frameworks.custom;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content framework-select-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
+      <div
+        className="modal-content framework-select-modal"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="modal-header gradient-header">
           <div className="modal-title-row">
-            <Icon name="git-compare" size="24px" color="#3b82f6" />
+            <Icon name="git-compare" size="24px" />
             <h2 className="modal-title">{title}</h2>
           </div>
           <button className="modal-close" onClick={onClose} title="Close">
@@ -63,17 +67,19 @@ export default function FrameworkSelectModal({
         <div className="framework-select-content">
           {/* Tab buttons */}
           <div className="framework-tabs">
-            <button 
-              className={`tab-btn ${activeTab === 'predefined' ? 'active' : ''}`}
-              onClick={() => setActiveTab('predefined')}
+            <button
+              className={`tab-btn ${
+                activeTab === "predefined" ? "active" : ""
+              }`}
+              onClick={() => setActiveTab("predefined")}
             >
               <Icon name="shield" size="16px" />
               Predefined Frameworks
               <span className="tab-count">{frameworks.predefined.length}</span>
             </button>
-            <button 
-              className={`tab-btn ${activeTab === 'custom' ? 'active' : ''}`}
-              onClick={() => setActiveTab('custom')}
+            <button
+              className={`tab-btn ${activeTab === "custom" ? "active" : ""}`}
+              onClick={() => setActiveTab("custom")}
             >
               <Icon name="folder" size="16px" />
               Custom Frameworks
@@ -98,18 +104,25 @@ export default function FrameworkSelectModal({
                   <p>No {activeTab} frameworks available</p>
                 </div>
               ) : (
-                currentFrameworks.map(fw => (
-                  <div 
+                currentFrameworks.map((fw) => (
+                  <div
                     key={fw.id}
-                    className={`framework-option ${selectedFramework?.id === fw.id ? 'selected' : ''}`}
+                    className={`framework-option ${
+                      selectedFramework?.id === fw.id ? "selected" : ""
+                    }`}
                     onClick={() => setSelectedFramework(fw)}
                   >
-                    <div className="framework-option-icon" style={{ backgroundColor: fw.color }}>
+                    <div
+                      className="framework-option-icon"
+                      style={{ backgroundColor: fw.color }}
+                    >
                       <span>{fw.icon}</span>
                     </div>
                     <div className="framework-option-info">
                       <div className="framework-option-name">{fw.name}</div>
-                      <div className="framework-option-fullname">{fw.fullName}</div>
+                      <div className="framework-option-fullname">
+                        {fw.fullName}
+                      </div>
                     </div>
                     {selectedFramework?.id === fw.id && (
                       <div className="framework-option-check">
@@ -127,19 +140,18 @@ export default function FrameworkSelectModal({
           <button type="button" className="btn-secondary" onClick={onClose}>
             Cancel
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="btn-primary"
             onClick={handleSelect}
             disabled={!selectedFramework}
-            style={{ backgroundColor: selectedFramework?.color || '#3b82f6' }}
+            style={{ backgroundColor: selectedFramework?.color || "#3b82f6" }}
           >
             <Icon name="git-compare" size="16px" />
-            Compare with {selectedFramework?.name || 'Framework'}
+            Compare with {selectedFramework?.name || "Framework"}
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
-
