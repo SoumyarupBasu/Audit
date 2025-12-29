@@ -136,6 +136,8 @@ function AllUsers() {
       if (modalState.mode === "create") {
         const response = await createUser(userData);
         toast.success(response.message || "User created successfully");
+        // Refresh table immediately after user creation
+        fetchUsers();
         return response;
       } else {
         const response = await updateUser(
@@ -143,9 +145,9 @@ function AllUsers() {
           userData
         );
         toast.success(response.message || "User updated successfully");
+        closeModal();
+        fetchUsers();
       }
-      closeModal();
-      fetchUsers();
     } catch (error) {
       throw error;
     }

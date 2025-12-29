@@ -74,8 +74,6 @@ export default function UserModal({
       // backend returns temp password on create
       if (mode === "create" && response?.user?.temporaryPassword) {
         setGeneratedPassword(response.user.temporaryPassword);
-      } else {
-        onClose();
       }
     } catch (error) {
       console.error("Error saving user:", error);
@@ -228,12 +226,24 @@ export default function UserModal({
               <p className="info-text">
                 ⚠️ This password is auto-generated. Copy and share it securely.
               </p>
-              <div className="password-row">
-                <code>{generatedPassword}</code>
-                <button type="button" onClick={copyPassword}>
-                  <Icon name="copy" size="16px" />
-                  Copy
-                </button>
+              <div className="flex items-center justify-between gap-2">
+                <div className="password-row" style={{ width: "100%" }}>
+                  <code>{generatedPassword}</code>
+                  <button type="button" onClick={copyPassword}>
+                    <Icon name="copy" size="16px" />
+                    Copy
+                  </button>
+                </div>
+                <div className="password-actions">
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={onClose}
+                  >
+                    <Icon name="check" size="16px" />
+                    Done
+                  </button>
+                </div>
               </div>
             </div>
           )}
