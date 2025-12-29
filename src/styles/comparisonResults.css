@@ -1,4 +1,5 @@
 /* Comparison Results Page Styles */
+@import './searchBox.css';
 
 .comparison-results-page {
   padding: var(--spacing-lg);
@@ -141,9 +142,6 @@
   display: flex;
   gap: var(--spacing-xs);
 }
-
-/* Import search box styles */
-@import './searchBox.css';
 
 .filter-btn {
   padding: var(--spacing-sm) var(--spacing-md);
